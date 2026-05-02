@@ -1,0 +1,223 @@
+name: EasyTravel CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+      - 'feature/**'
+  pull_request:
+    branches:
+      - main
+      - develop
+
+env:
+  HELM_VERSION: v3.12.0
+  KUBECTL_VERSION: v1.28.0
+
+jobs:
+  lint-and-validate:
+    name: Lint and Validate Helm Charts
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v3
+        with:
+          version: ${{ env.HELM_VERSION }}
+
+      - name: Lint Helm chart
+        run: |
+          helm lint helm-charts/easytravel
+
+      - name: Template and validate Dev
+        run: |
+          helm template easytravel-dev helm-charts/easytravel \
+            -f helm-charts/easytravel/values.yaml \
+            -f helm-charts/easytravel/values-dev.yaml \
+            --debug > /tmp/dev-manifests.yaml
+
+      - name: Template and validate Staging
+        run: |
+          helm template easytravel-staging helm-charts/easytravel \
+            -f helm-charts/easytravel/values.yaml \
+            -f helm-charts/easytravel/values-staging.yaml \
+            --debug > /tmp/staging-manifests.yaml
+
+      - name: Template and validate Production
+        run: |
+          helm template easytravel-prod helm-charts/easytravel \
+            -f helm-charts/easytravel/values.yaml \
+            -f helm-charts/easytravel/values-prod.yaml \
+            --debug > /tmp/prod-manifests.yaml
+
+      - name: Upload manifests as artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: rendered-manifests
+          path: /tmp/*-manifests.yaml
+
+  security-scan:
+    name: Security Scanning
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'config'
+          scan-ref: 'helm-charts/easytravel'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+
+      - name: Upload Trivy results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v2
+        if: always()
+        with:
+          sarif_file: 'trivy-results.sarif'
+
+  deploy-dev:
+    name: Deploy to Dev
+    needs: [lint-and-validate]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/main'
+    environment:
+      name: development
+      url: https://easytravel-dev.yourdomain.com
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Set AKS context
+        uses: azure/aks-set-context@v3
+        with:
+          resource-group: ${{ secrets.AZURE_RESOURCE_GROUP }}
+          cluster-name: ${{ secrets.AZURE_CLUSTER_NAME }}
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v3
+        with:
+          version: ${{ env.HELM_VERSION }}
+
+      - name: Deploy to Dev using Helm
+        run: |
+          helm upgrade --install easytravel-dev ./helm-charts/easytravel \
+            --namespace easytravel-dev \
+            --create-namespace \
+            --values helm-charts/easytravel/values.yaml \
+            --values helm-charts/easytravel/values-dev.yaml \
+            --wait \
+            --timeout 10m
+
+      - name: Verify deployment
+        run: |
+          kubectl rollout status deployment/backend -n easytravel-dev
+          kubectl rollout status deployment/frontend -n easytravel-dev
+          kubectl rollout status deployment/nginx -n easytravel-dev
+
+      - name: Run smoke tests
+        run: |
+          # Add your smoke tests here
+          kubectl get pods -n easytravel-dev
+
+  deploy-staging:
+    name: Deploy to Staging
+    needs: [lint-and-validate, security-scan]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    environment:
+      name: staging
+      url: https://easytravel-staging.yourdomain.com
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Set AKS context
+        uses: azure/aks-set-context@v3
+        with:
+          resource-group: ${{ secrets.AZURE_RESOURCE_GROUP }}
+          cluster-name: ${{ secrets.AZURE_CLUSTER_NAME }}
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v3
+        with:
+          version: ${{ env.HELM_VERSION }}
+
+      - name: Deploy to Staging using Helm
+        run: |
+          helm upgrade --install easytravel-staging ./helm-charts/easytravel \
+            --namespace easytravel-staging \
+            --create-namespace \
+            --values helm-charts/easytravel/values.yaml \
+            --values helm-charts/easytravel/values-staging.yaml \
+            --wait \
+            --timeout 10m
+
+      - name: Verify deployment
+        run: |
+          kubectl rollout status deployment/backend -n easytravel-staging
+          kubectl rollout status deployment/frontend -n easytravel-staging
+          kubectl rollout status deployment/nginx -n easytravel-staging
+
+  deploy-production:
+    name: Deploy to Production
+    needs: [deploy-staging]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    environment:
+      name: production
+      url: https://easytravel.yourdomain.com
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Set AKS context
+        uses: azure/aks-set-context@v3
+        with:
+          resource-group: ${{ secrets.AZURE_RESOURCE_GROUP }}
+          cluster-name: ${{ secrets.AZURE_CLUSTER_NAME }}
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v3
+        with:
+          version: ${{ env.HELM_VERSION }}
+
+      - name: Deploy to Production using Helm
+        run: |
+          helm upgrade --install easytravel-prod ./helm-charts/easytravel \
+            --namespace easytravel-prod \
+            --create-namespace \
+            --values helm-charts/easytravel/values.yaml \
+            --values helm-charts/easytravel/values-prod.yaml \
+            --wait \
+            --timeout 15m
+
+      - name: Verify deployment
+        run: |
+          kubectl rollout status deployment/backend -n easytravel-prod
+          kubectl rollout status deployment/frontend -n easytravel-prod
+          kubectl rollout status deployment/nginx -n easytravel-prod
+
+      - name: Post-deployment health check
+        run: |
+          # Add your production health checks here
+          kubectl get pods -n easytravel-prod

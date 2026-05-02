@@ -1,0 +1,42 @@
+{{- if .Values.loadgen.enabled }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: loadgen
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: loadgen
+    app.kubernetes.io/name: loadgen
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/part-of: easytravel
+    environment: {{ .Values.environment }}
+spec:
+  replicas: {{ .Values.loadgen.replicaCount }}
+  selector:
+    matchLabels:
+      app: loadgen
+  template:
+    metadata:
+      labels:
+        app: loadgen
+        app.kubernetes.io/name: loadgen
+        app.kubernetes.io/part-of: easytravel
+        environment: {{ .Values.environment }}
+    spec:
+      containers:
+      - name: loadgen
+        image: "{{ .Values.global.imageRegistry }}/{{ .Values.loadgen.image.repository }}:{{ .Values.loadgen.image.tag }}"
+        imagePullPolicy: {{ .Values.global.imagePullPolicy }}
+        env:
+        - name: ET_FRONTEND_URL
+          value: "http://{{ .Values.nginx.service.name }}:{{ .Values.nginx.service.ports.http }}"
+        - name: ET_BACKEND_URL
+          value: "http://{{ .Values.nginx.service.name }}:{{ .Values.nginx.service.ports.backend }}"
+        - name: ET_VISIT_NUMBER
+          value: {{ .Values.loadgen.env.visitNumber | quote }}
+        - name: ET_PROBLEMS
+          value: {{ .Values.loadgen.env.problems | quote }}
+        resources:
+          {{- toYaml .Values.loadgen.resources | nindent 10 }}
+{{- end }}

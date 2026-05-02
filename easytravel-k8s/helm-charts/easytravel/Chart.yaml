@@ -1,0 +1,13 @@
+apiVersion: v2
+name: easytravel
+description: A Helm chart for EasyTravel application - multi-environment deployment
+type: application
+version: 1.0.0
+appVersion: "2.0.0"
+keywords:
+  - easytravel
+  - demo
+  - microservices
+maintainers:
+  - name: DevOps Team
+    email: devops@example.com

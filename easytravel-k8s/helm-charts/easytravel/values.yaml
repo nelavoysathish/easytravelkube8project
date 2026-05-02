@@ -1,0 +1,258 @@
+# Default values for easytravel
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# Global settings
+global:
+  imageRegistry: dynatrace
+  imagePullPolicy: Always
+  storageClass: ""
+
+# Environment-specific settings (will be overridden by environment values files)
+environment: dev
+namespace: easytravel-dev
+
+# MongoDB Configuration
+mongodb:
+  enabled: true
+  replicaCount: 1
+  image:
+    repository: dynatrace/easytravel-mongodb
+    tag: latest
+  service:
+    name: mongodb-service
+    type: ClusterIP
+    port: 27017
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "250m"
+    limits:
+      memory: "512Mi"
+      cpu: "500m"
+  persistence:
+    enabled: true
+    size: 5Gi
+    # storageClassName: default
+  env:
+    authDb: admin
+    user: etAdmin
+    password: adminadmin
+
+# Backend Service Configuration
+backend:
+  enabled: true
+  replicaCount: 2
+  image:
+    repository: dynatrace/easytravel-backend
+    tag: latest
+  service:
+    name: backend-service
+    type: ClusterIP
+    port: 8080
+  resources:
+    requests:
+      memory: "400Mi"
+      cpu: "300m"
+    limits:
+      memory: "500Mi"
+      cpu: "500m"
+  env:
+    catalinaOpts: "-Xmx300m"
+    apmServerDefault: "APM"
+  autoscaling:
+    enabled: false
+    minReplicas: 2
+    maxReplicas: 5
+    targetCPUUtilizationPercentage: 70
+
+# Frontend Service Configuration
+frontend:
+  enabled: true
+  replicaCount: 2
+  image:
+    repository: dynatrace/easytravel-frontend
+    tag: latest
+  service:
+    name: frontend-service
+    type: ClusterIP
+    port: 8080
+  resources:
+    requests:
+      memory: "400Mi"
+      cpu: "300m"
+    limits:
+      memory: "525Mi"
+      cpu: "500m"
+  env:
+    catalinaOpts: "-Xmx525m"
+    apmServerDefault: "APM"
+  autoscaling:
+    enabled: false
+    minReplicas: 2
+    maxReplicas: 5
+    targetCPUUtilizationPercentage: 70
+
+# Angular Frontend Configuration
+angularFrontend:
+  enabled: true
+  replicaCount: 2
+  image:
+    repository: dynatrace/easytravel-angular-frontend
+    tag: latest
+  service:
+    name: angular-frontend-service
+    type: ClusterIP
+    port: 8080
+  resources:
+    requests:
+      memory: "400Mi"
+      cpu: "300m"
+    limits:
+      memory: "525Mi"
+      cpu: "500m"
+  env:
+    catalinaOpts: "-Xmx525m"
+    apmServerDefault: "APM"
+  autoscaling:
+    enabled: false
+    minReplicas: 2
+    maxReplicas: 5
+    targetCPUUtilizationPercentage: 70
+
+# Nginx Reverse Proxy Configuration
+nginx:
+  enabled: true
+  replicaCount: 2
+  image:
+    repository: dynatrace/easytravel-nginx
+    tag: latest
+  service:
+    name: nginx-service
+    type: LoadBalancer
+    ports:
+      http: 80
+      angular: 9079
+      backend: 8080
+  resources:
+    requests:
+      memory: "128Mi"
+      cpu: "100m"
+    limits:
+      memory: "256Mi"
+      cpu: "200m"
+
+# Load Generator Configuration
+loadgen:
+  enabled: true
+  replicaCount: 1
+  image:
+    repository: dynatrace/easytravel-loadgen
+    tag: latest
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "200m"
+    limits:
+      memory: "512Mi"
+      cpu: "400m"
+  env:
+    visitNumber: 2
+    problems: "BadCacheSynchronization,CPULoad,DatabaseCleanup,DatabaseSlowdown,FetchSizeTooSmall,JourneySearchError404,JourneySearchError500,LoginProblems,MobileErrors,TravellersOptionBox"
+
+# Headless Load Generators
+headlessLoadgen:
+  customer:
+    enabled: false
+    replicaCount: 1
+    image:
+      repository: dynatrace/easytravel-headless-loadgen
+      tag: latest
+    resources:
+      requests:
+        memory: "512Mi"
+        cpu: "300m"
+      limits:
+        memory: "1Gi"
+        cpu: "500m"
+    env:
+      visitNumber: 2
+      maxChromeDrivers: 4
+      scenarioName: "Headless Customer Scenario"
+  
+  angular:
+    enabled: false
+    replicaCount: 1
+    image:
+      repository: dynatrace/easytravel-headless-loadgen
+      tag: latest
+    resources:
+      requests:
+        memory: "512Mi"
+        cpu: "300m"
+      limits:
+        memory: "1Gi"
+        cpu: "500m"
+    env:
+      visitNumber: 2
+      maxChromeDrivers: 4
+      scenarioName: "Headless Angular Scenario"
+
+# Ingress Configuration
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+  hosts:
+    - host: easytravel-dev.example.com
+      paths:
+        - path: /
+          pathType: Prefix
+          service: nginx-service
+          port: 80
+  tls:
+    - secretName: easytravel-dev-tls
+      hosts:
+        - easytravel-dev.example.com
+
+# Network Policies
+networkPolicy:
+  enabled: false
+  policyTypes:
+    - Ingress
+    - Egress
+
+# Pod Disruption Budget
+podDisruptionBudget:
+  enabled: false
+  minAvailable: 1
+
+# Service Monitor for Prometheus
+serviceMonitor:
+  enabled: false
+  interval: 30s
+  scrapeTimeout: 10s
+
+# Pod Security
+podSecurityContext:
+  runAsNonRoot: false
+  # fsGroup: 2000
+
+securityContext:
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+# Node selector
+nodeSelector: {}
+
+# Tolerations
+tolerations: []
+
+# Affinity
+affinity: {}

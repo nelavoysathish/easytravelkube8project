@@ -1,0 +1,95 @@
+{{- if .Values.mongodb.enabled }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongodb
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: mongodb
+    app.kubernetes.io/name: mongodb
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/part-of: easytravel
+    environment: {{ .Values.environment }}
+spec:
+  replicas: {{ .Values.mongodb.replicaCount }}
+  selector:
+    matchLabels:
+      app: mongodb
+  template:
+    metadata:
+      labels:
+        app: mongodb
+        app.kubernetes.io/name: mongodb
+        app.kubernetes.io/part-of: easytravel
+        environment: {{ .Values.environment }}
+    spec:
+      containers:
+      - name: mongodb
+        image: "{{ .Values.global.imageRegistry }}/{{ .Values.mongodb.image.repository }}:{{ .Values.mongodb.image.tag }}"
+        imagePullPolicy: {{ .Values.global.imagePullPolicy }}
+        ports:
+        - containerPort: 27017
+          name: mongo
+          protocol: TCP
+        - containerPort: 28017
+          name: mongo-web
+          protocol: TCP
+        resources:
+          {{- toYaml .Values.mongodb.resources | nindent 10 }}
+        {{- if .Values.mongodb.persistence.enabled }}
+        volumeMounts:
+        - name: mongodb-data
+          mountPath: /data/db
+        {{- end }}
+      {{- if .Values.mongodb.persistence.enabled }}
+      volumes:
+      - name: mongodb-data
+        persistentVolumeClaim:
+          claimName: mongodb-pvc
+      {{- end }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.mongodb.service.name }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: mongodb
+    app.kubernetes.io/name: mongodb
+    app.kubernetes.io/instance: {{ .Release.Name }}
+spec:
+  type: {{ .Values.mongodb.service.type }}
+  ports:
+  - name: mongo
+    port: {{ .Values.mongodb.service.port }}
+    targetPort: 27017
+    protocol: TCP
+  - name: mongo-web
+    port: 28017
+    targetPort: 28017
+    protocol: TCP
+  selector:
+    app: mongodb
+---
+{{- if .Values.mongodb.persistence.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mongodb-pvc
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: mongodb
+    app.kubernetes.io/name: mongodb
+    app.kubernetes.io/instance: {{ .Release.Name }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  {{- if .Values.global.storageClass }}
+  storageClassName: {{ .Values.global.storageClass }}
+  {{- end }}
+  resources:
+    requests:
+      storage: {{ .Values.mongodb.persistence.size }}
+{{- end }}
+{{- end }}

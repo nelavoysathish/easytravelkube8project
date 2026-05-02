@@ -1,0 +1,97 @@
+{{- if .Values.angularFrontend.enabled }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: angular-frontend
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: angular-frontend
+    app.kubernetes.io/name: angular-frontend
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/part-of: easytravel
+    environment: {{ .Values.environment }}
+spec:
+  replicas: {{ .Values.angularFrontend.replicaCount }}
+  selector:
+    matchLabels:
+      app: angular-frontend
+  template:
+    metadata:
+      labels:
+        app: angular-frontend
+        app.kubernetes.io/name: angular-frontend
+        app.kubernetes.io/part-of: easytravel
+        environment: {{ .Values.environment }}
+    spec:
+      containers:
+      - name: angular-frontend
+        image: "{{ .Values.global.imageRegistry }}/{{ .Values.angularFrontend.image.repository }}:{{ .Values.angularFrontend.image.tag }}"
+        imagePullPolicy: {{ .Values.global.imagePullPolicy }}
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        env:
+        - name: CATALINA_OPTS
+          value: {{ .Values.angularFrontend.env.catalinaOpts | quote }}
+        - name: ET_BACKEND_URL
+          value: "http://{{ .Values.backend.service.name }}:{{ .Values.backend.service.port }}"
+        resources:
+          {{- toYaml .Values.angularFrontend.resources | nindent 10 }}
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 120
+          periodSeconds: 10
+          timeoutSeconds: 5
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 60
+          periodSeconds: 5
+          timeoutSeconds: 3
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.angularFrontend.service.name }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: angular-frontend
+    app.kubernetes.io/name: angular-frontend
+    app.kubernetes.io/instance: {{ .Release.Name }}
+spec:
+  type: {{ .Values.angularFrontend.service.type }}
+  ports:
+  - name: http
+    port: {{ .Values.angularFrontend.service.port }}
+    targetPort: 8080
+    protocol: TCP
+  selector:
+    app: angular-frontend
+---
+{{- if .Values.angularFrontend.autoscaling.enabled }}
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: angular-frontend-hpa
+  namespace: {{ .Values.namespace }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: angular-frontend
+  minReplicas: {{ .Values.angularFrontend.autoscaling.minReplicas }}
+  maxReplicas: {{ .Values.angularFrontend.autoscaling.maxReplicas }}
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: {{ .Values.angularFrontend.autoscaling.targetCPUUtilizationPercentage }}
+{{- end }}
+{{- end }}
