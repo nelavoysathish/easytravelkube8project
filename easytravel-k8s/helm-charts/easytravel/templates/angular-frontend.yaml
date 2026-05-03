@@ -24,9 +24,11 @@ spec:
         app.kubernetes.io/part-of: easytravel
         environment: {{ .Values.environment }}
     spec:
+      imagePullSecrets:
+        - name: dockerhub-secret      
       containers:
       - name: angular-frontend
-        image: "{{ .Values.global.imageRegistry }}/{{ .Values.angularFrontend.image.repository }}:{{ .Values.angularFrontend.image.tag }}"
+        image: "{{ .Values.angularFrontend.image.repository }}:{{ .Values.angularFrontend.image.tag }}"
         imagePullPolicy: {{ .Values.global.imagePullPolicy }}
         ports:
         - containerPort: 8080

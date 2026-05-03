@@ -24,9 +24,11 @@ spec:
         app.kubernetes.io/part-of: easytravel
         environment: {{ .Values.environment }}
     spec:
+      imagePullSecrets:
+        - name: dockerhub-secret      
       containers:
       - name: frontend
-        image: "{{ .Values.global.imageRegistry }}/{{ .Values.frontend.image.repository }}:{{ .Values.frontend.image.tag }}"
+        image: "{{ .Values.frontend.image.repository }}:{{ .Values.frontend.image.tag }}"
         imagePullPolicy: {{ .Values.global.imagePullPolicy }}
         ports:
         - containerPort: 8080

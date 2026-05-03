@@ -24,9 +24,11 @@ spec:
         app.kubernetes.io/part-of: easytravel
         environment: {{ .Values.environment }}
     spec:
-      containers:
+      imagePullSecrets:
+        - name: dockerhub-secret
+      containers:       
       - name: loadgen
-        image: "{{ .Values.global.imageRegistry }}/{{ .Values.loadgen.image.repository }}:{{ .Values.loadgen.image.tag }}"
+        image: "{{ .Values.loadgen.image.repository }}:{{ .Values.loadgen.image.tag }}"
         imagePullPolicy: {{ .Values.global.imagePullPolicy }}
         env:
         - name: ET_FRONTEND_URL

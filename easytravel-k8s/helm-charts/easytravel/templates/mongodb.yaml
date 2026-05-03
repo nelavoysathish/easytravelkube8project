@@ -24,9 +24,25 @@ spec:
         app.kubernetes.io/part-of: easytravel
         environment: {{ .Values.environment }}
     spec:
+      imagePullSecrets:
+        - name: dockerhub-secret
+      {{- if .Values.mongodb.persistence.enabled }}
+      initContainers:
+      - name: create-mongodb-dir
+        image: busybox:1.35
+        command: 
+          - sh
+          - -c
+          - |
+            mkdir -p /data/db/easyTravel
+            chmod -R 777 /data/db
+        volumeMounts:
+        - name: mongodb-data
+          mountPath: /data/db
+      {{- end }}
       containers:
       - name: mongodb
-        image: "{{ .Values.global.imageRegistry }}/{{ .Values.mongodb.image.repository }}:{{ .Values.mongodb.image.tag }}"
+        image: "{{ .Values.mongodb.image.repository }}:{{ .Values.mongodb.image.tag }}"
         imagePullPolicy: {{ .Values.global.imagePullPolicy }}
         ports:
         - containerPort: 27017
