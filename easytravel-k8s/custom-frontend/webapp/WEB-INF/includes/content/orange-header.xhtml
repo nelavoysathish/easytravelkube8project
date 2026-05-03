@@ -1,0 +1,53 @@
+<div xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:ice="http://www.icesoft.com/icefaces/component"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+                  class="header_container">
+    <div class="header_content">
+	<div class="orangeHeader">
+		 <div id="homelink">
+		  <h:link outcome="orange">Homelink</h:link>
+		</div>
+
+		<div class="orangeHeaderLinks">
+			<!-- causes the last item to draw on the next line!?! span class="orangeHeaderSeparator"></span-->
+
+			<h:link outcome="orange">Home</h:link><span class="orangeHeaderSeparator"></span>
+
+            <!-- Use pure HTML element to be able to get jsp page -->
+            <a href="special-offers.jsp"> Special Offers</a><span class="orangeHeaderSeparator"></span>
+
+			<h:link outcome="about-orange" styleClass="active_#{dataBean.currentViewId eq 'about-orange'}">About</h:link><span class="orangeHeaderSeparator"></span>
+			<h:link outcome="contact-orange" styleClass="active_#{dataBean.currentViewId eq 'contact-orange'}">Contact</h:link><span class="orangeHeaderSeparator"></span>
+
+
+			<h:link outcome="legal-orange" styleClass="active_#{dataBean.currentViewId eq 'legal-orange'}">Terms of Use</h:link><span class="orangeHeaderSeparator"></span>
+
+			<h:link outcome="privacy-orange" styleClass="active_#{dataBean.currentViewId eq 'privacy-orange'}">Privacy Policy</h:link><span class="orangeHeaderSeparator"></span>
+
+			<a id="destinations" style="float: left;"/>
+
+			<!-- <a name="_t29" id="_t29" href="/blog/index.php" class="active_false">Blog</a><span class="orangeHeaderSeparator"></span> -->
+			<ice:outputText value="#{journeyBean.head}" escape="false" nospan="true"/>
+
+			<ice:outputText value="#{pluginBean.header}" escape="false" nospan="true"/>
+		</div>
+
+		<div class="orangeSocial">
+   			<ice:outputLink value="itms-services://" title="download iOS app">
+	      		<f:param name="action" value="download-manifest" />
+	      		<f:param name="url" value="#{appleMobileBean.urlForPropertiesListFile}" />
+	      		<img alt="download iOS app" src="img/apple/apple.png" />
+   			</ice:outputLink>
+			<a href="/apps/EasyTravelAndroid.apk" target="_blank"><img alt="download android app" src="img/androidbutton.png"/></a>
+			<a href="https://www.facebook.com/dynatrace" target="_blank"><img src="img/facebookbutton.png"/></a>
+			<a href="https://twitter.com/dynatrace" target="_blank"><img src="img/twitterbutton.png"/></a>
+			<a id="dynatrace" target="_blank" href="http://www.dynatrace.com"><img height="17px" width="17px" src="img/dynatrace.ico" /></a>
+			<img src="img/rssbutton.png"/>
+		</div>
+		<ui:include src="/WEB-INF/includes/content/orange-login.xhtml"/>
+
+	</div>
+	    </div>
+    </div>

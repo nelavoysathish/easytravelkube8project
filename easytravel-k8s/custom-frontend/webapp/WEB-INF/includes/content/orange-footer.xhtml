@@ -1,0 +1,48 @@
+<div    xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:ice="http://www.icesoft.com/icefaces/component"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:fb="http://www.facebook.com/2008/fbml"
+        xmlns:og="http://ogp.me/ns#"
+        class="footer_container">
+	<!--  ensure nothing from the main panel overflows into the footer, &#160; is non-breaking-space -->
+	<div class="" style="width:100%;clear:both">&#160;</div>
+
+    <div class="footer_content">
+		<div style="clear: both;"></div>
+		<!-- TODO: place and style footer content from plugins -->
+		<span class="pluginFooter"><ice:outputText value="#{pluginBean.footer}" escape="false" nospan="true"/></span>
+
+		<ice:panelGroup rendered="#{facebookBean.facebookEnabled and facebookBean.facebookGloballyEnabled}">
+		<div class="twitter-facebook-block">
+		<div id="fb-root"></div>
+		<div class="twitter-facebook">
+			<script src="//connect.facebook.net/en_US/all.js#xfbml=1"></script>
+			<fb:like align="right" show_faces="false" width="225" href="http://www.facebook.com/pages/dynaTrace/110934948924599" style="position: static !important"></fb:like>
+		</div>
+		<div class="twitter-facebook">
+			<a href="http://twitter.com/share" class="twitter-share-button" data-url="dynatrace" data-count="horizontal">Tweet</a>
+			<script type="text/javascript" src="//platform.twitter.com/widgets.js"></script>
+		</div>
+		</div>
+		</ice:panelGroup>
+
+		<div style="clear: both;"></div>
+		<div class="orangeLegal">
+		  FARE TERMS AND CONDITIONS: Sample round-trip and one-way fares posted on www.easytravel.com are per person and include all applicable taxes and fees including, but not limited to September 11th Security Fee of up to $500 for each flight segment originating at a U.S. airport; Passenger Facility Charges of up to $18, depending on itinerary; Federal Segment Fees of $3.70 per segment; and foreign and U.S. government-imposed-charges of up to $400 per international round-trip flight, depending on routing and destination. A flight segment is defined as one takeoff and one landing. Fares are subject to availability and change without notice. If advertised fare is not available for dates chosen, higher fares may be offered. Actual prices may vary based on actual routing, fluctuations in currency (international only), and day of week.
+		  <!--br/>
+		  (c) 2011 dynaTrace  All rights reserved. Copyright for travel announcements appearing on this website is owned by dynaTrace
+		  -->
+		</div>
+		<div style="clear: both;"></div>
+	
+		<div class="orangeFooter">
+		</div>
+
+    </div>
+
+	<span class="pluginFooter"><ice:outputText value="#{pluginBean.footerScript}" escape="false" nospan="true"/></span>
+    <script type="text/javascript" src="js/GlobalProd.js"></script>
+    <script type="text/javascript" src="js/jquery.js"></script>
+</div>

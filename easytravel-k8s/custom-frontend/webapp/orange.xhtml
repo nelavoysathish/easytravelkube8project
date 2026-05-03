@@ -1,0 +1,22 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:ui="http://java.sun.com/jsf/facelets" 
+        xmlns:ice="http://www.icesoft.com/icefaces/component"
+        xmlns:fb="http://www.facebook.com/2008/fbml"
+		xmlns:gate11="http://www.dynatrace.com/gate11/taglib"
+        template="/WEB-INF/includes/templates/orange-template.xhtml">
+       <ui:param name="pageTitle" value="One step to happiness" />
+      <ui:define name="page-content">
+		<ui:include src="/WEB-INF/includes/content/orange-promotions.xhtml"/>
+	  </ui:define>
+      <ui:define name="main-page-content">
+		<ui:include src="/WEB-INF/includes/content/search.xhtml"/>
+		<gate11:journeyPager/>
+		<ui:include src="/WEB-INF/includes/content/result.xhtml"/>
+	  </ui:define>
+	  <ui:define name="main-page-finish">
+	  	<ice:outputText value="#{pluginBean.contentFinish}" escape="false" nospan="true"/>
+	  </ui:define>
+</ui:composition>

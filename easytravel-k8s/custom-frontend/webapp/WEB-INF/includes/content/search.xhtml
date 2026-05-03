@@ -1,0 +1,70 @@
+
+<div xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:ice="http://www.icesoft.com/icefaces/component"
+        xmlns:ui="http://java.sun.com/jsf/facelets">
+
+    <ice:panelGroup styleClass="orangeSearch">
+        <h1 class="mainBoxHeader">Your Journey</h1>
+		<ice:outputConnectionStatus id="connectStat2" styleClass="navConnectionStatus" />
+		<div class="orangeSearchForm">
+			<ice:panelGrid columns="2" columnClasses="label,data">
+				<ice:outputLabel for="destination" value="Trip Destination"/>
+		    	<ice:selectInputText rows="10" width="95%" id="destination"
+						listVar="location"
+			          	listValue="#{searchBean.selectList}"
+			          	value="#{searchBean.destinationName}"
+						options="{minChars:3, frequency:0.01}"
+						textChangeListener="#{searchBean.searchDestination}"
+						actionListener="#{searchBean.selectDestination}"
+			          	title="Start typing your destination...">
+					<f:facet name="selectInputText">
+						<ice:panelGrid columns="1">
+							<ice:outputText value="#{location.name}"/>
+						</ice:panelGrid>
+					</f:facet>
+				</ice:selectInputText>
+
+				<ice:outputLabel for="fromDate" value="From Date"/>
+				<ice:selectInputDate value="#{searchBean.fromDate}" renderAsPopup="true" width="95%"
+						id="fromDate" lang="en"
+						title="When do you want to start...">
+		     		<f:convertDateTime dateStyle="medium"/>
+		     		<h:message style="color: red" for="fromDate"/>
+				</ice:selectInputDate>
+
+				<ice:outputLabel for="toDate" value="To Date"/>
+				<ice:selectInputDate value="#{searchBean.toDate}" renderAsPopup="true" width="95%"
+						id="toDate" lang="en"
+						title="When do you need to be home...">
+					<f:convertDateTime dateStyle="medium"/>
+					<h:message style="color: red" for="toDate"/>
+				</ice:selectInputDate>
+			</ice:panelGrid>
+
+			<ice:commandButton id="search" actionListener="#{searchBean.searchJourneys}" value="Search" styleClass="commonButton orangeButton1 orangeSearchButton" onclick="showRecommendation();" />
+
+			<ice:panelGroup styleClass="searchHint">
+				<ice:outputText rendered="#{empty searchBean.destinationName}" value="Fill out the boxes above and your results will appear below."/>
+				<ice:panelGroup rendered="#{not empty searchBean.destinationName}">
+					<ice:outputText rendered="#{searchBean.journeyCount eq 0}" styleClass="searchResult" value="No journeys found."/>
+					<ice:outputText rendered="#{searchBean.journeyCount eq 1}" styleClass="searchResult" value="Found one journey."/>
+					<ice:outputText rendered="#{searchBean.journeyCount gt 1}" styleClass="searchResult" value="Found #{searchBean.journeyCount} journeys."/>
+					<ice:commandLink  id="clear" action="#{searchBean.clearSearch}" value=" [Clear]"/>
+					<h:link outcome="result" value=" [Permlink]">
+						<f:param name="dest" value="#{searchBean.destinationName}" />
+						<f:param name="from" value="#{searchBean.fromDateAsString}"/>
+						<f:param name="to" value="#{searchBean.toDateAsString}" />
+					</h:link>
+				</ice:panelGroup>
+			</ice:panelGroup>
+		</div>
+	</ice:panelGroup>
+
+	<script>
+		<!-- cwpl-rpsciuk: code below is needed for IE8 to prevent displaying an error during page is loaded -->
+		var showRecommendationWait1000 = function() { showRecommendationWait(1000); };
+		window.onload = showRecommendationWait1000;
+	</script>
+</div>

@@ -1,0 +1,135 @@
+<div xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:ice="http://www.icesoft.com/icefaces/component"
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+	 xmlns:gate11="http://www.dynatrace.com/gate11/taglib"
+     class="mainBox">
+         
+        <h1 class="mainBoxHeader">Give Your Rating !</h1>
+     
+	    <div class="tripDetailsHeader">
+			<div id="tenant">#{journeyBean.selectedJourney.tenant}</div>
+			<strong>#{journeyBean.selectedJourney.name}</strong>
+			<ice:panelGroup id="showratinglinks" visible="#{journeyBean.isStartPhpServer()}" style="float:right;width:150px;">
+	       		<span style="padding-left:10px">
+	   			<h:link id="rating-details" outcome="orange-rating-results" value="Rating Details" tilte ="Rating Details">
+		      		<f:param name="journeyId" value="#{journeyBean.selectedJourney.id}" />
+	   			</h:link>
+	   		    </span>
+	   		    
+	   		    <span style="padding-left:10px">
+	   				<h:link id="rating-action" outcome="orange-rating-action" value="Rating" tilte ="Rating">
+		      		<f:param name="journeyId" value="#{journeyBean.selectedJourney.id}" />
+	   				</h:link>
+	   		    </span>
+   		    </ice:panelGroup>   
+		</div>  
+        <div class="mainScrollBox" id="ratingScrollBox">
+	      <div class="mainTextBox">
+	        <span style="font-size: .9em;"><div id="username">
+	        <p>Dear <strong><span id ="user">#{loginBean.userContext.userName}</span></strong></p></div>
+	        <p>Tell us about your experience at <strong>#{journeyBean.selectedJourney.name}</strong>.
+	           Your review will be published on easyTravel, where it will help other travelers select
+	           the perfect journey to stay. 
+	        </p>
+	        </span>
+		    <p><Br/><strong><font size="3">1.How woud you rate the following?</font></strong></p>
+		    <table width="500" border="0" align="center" cellpadding="0" cellspacing="0" bgcolor="#c2e1f5" >
+					  <tr>
+					    
+                        <td width="20" height="10" ><img src="img/arrow_style.png" alt="" />
+                        <span ><strong>Staff:</strong></span></td>
+                        <td width="80" align= "center">
+						  <div class="rate_widget rating_#{journeyBean.selectedJourney.id}_staff" rel="#{journeyBean.selectedJourney.id}_staff">	
+						  <div class="star_1 ratings_stars"></div>
+                          <div class="star_2 ratings_stars"></div>
+                          <div class="star_3 ratings_stars"></div>
+                          <div class="star_4 ratings_stars"></div>
+                          <div class="star_5 ratings_stars"></div> 
+						  </div>
+						</td>
+                      </tr>
+                      <tr>
+					  <td width="20" height="10"  > <img src="img/arrow_style.png" alt="" />
+					  <span><strong>Services/facilities:</strong></span></td>
+                        <td width="80" align= "center" >
+						  <div class="rate_widget rating_#{journeyBean.selectedJourney.id}_services" rel="#{journeyBean.selectedJourney.id}_services">		
+						  <div class="star_1 ratings_stars"></div>
+                          <div class="star_2 ratings_stars"></div>
+                          <div class="star_3 ratings_stars"></div>
+                          <div class="star_4 ratings_stars"></div>
+                          <div class="star_5 ratings_stars"></div>
+						  </div>
+						</td>
+                      </tr>
+                      <tr>
+					  <td width="20" height="10" font-size="10pt"> <img src="img/arrow_style.png" alt="" />
+					  <span><strong>Cleanliness of your room:</strong></span></td>
+                        <td width="80" align= "center" font-size="10pt">
+						  <div class="rate_widget rating_#{journeyBean.selectedJourney.id}_cleanliness" rel="#{journeyBean.selectedJourney.id}_cleanliness">		
+						  <div class="star_1 ratings_stars"></div>
+                          <div class="star_2 ratings_stars"></div>
+                          <div class="star_3 ratings_stars"></div>
+                          <div class="star_4 ratings_stars"></div>
+                          <div class="star_5 ratings_stars"></div>
+						  </div>
+						</td>
+                      </tr>
+                      <tr>
+					  <td width="20" height="10" font-size="10pt"> <img src="img/arrow_style.png" alt="" />
+					  <span><strong>Comfort:</strong></span></td>
+                        <td width="80" align= "center" font-size="10pt">
+						  <div class="rate_widget rating_#{journeyBean.selectedJourney.id}_comfort" rel="#{journeyBean.selectedJourney.id}_comfort">	
+						  <div class="star_1 ratings_stars"></div>
+                          <div class="star_2 ratings_stars"></div>
+                          <div class="star_3 ratings_stars"></div>
+                          <div class="star_4 ratings_stars"></div>
+                          <div class="star_5 ratings_stars"></div>
+						  </div>
+						</td>
+                      </tr>
+                      
+                       <tr>
+					  <td width="20" height="10" font-size="10pt"> <img src="img/arrow_style.png" alt="" />
+					  <span><strong>Value for money:</strong></span></td>
+                        <td width="80" align= "center" font-size="10pt">
+	                      <div class="rate_widget rating_#{journeyBean.selectedJourney.id}_value" rel="#{journeyBean.selectedJourney.id}_value">	
+						  <div class="star_1 ratings_stars"></div>
+                          <div class="star_2 ratings_stars"></div>
+                          <div class="star_3 ratings_stars"></div>
+                          <div class="star_4 ratings_stars"></div>
+                          <div class="star_5 ratings_stars"></div>
+						  </div>
+						</td>
+                      </tr>
+                        <tr>
+                      	<td width="20" height="10" font-size="10pt"> <img src="img/arrow_style.png" alt="" />
+                      	<span><strong>Location:</strong></span></td>
+                        <td width="80" align= "center" font-size="10pt">
+						  <div class="rate_widget rating_#{journeyBean.selectedJourney.id}_location" rel="#{journeyBean.selectedJourney.id}_location">	
+						  <div class="star_1 ratings_stars"></div>
+                          <div class="star_2 ratings_stars"></div>
+                          <div class="star_3 ratings_stars"></div>
+                          <div class="star_4 ratings_stars"></div>
+                          <div class="star_5 ratings_stars"></div>
+						  </div>
+						</td>
+                      </tr>
+                      
+                    </table>
+                          
+            <p><Br/><strong><font size="3">2.Your stay at #{journeyBean.selectedJourney.name}</font></strong></p>
+            <form name="comment"  onSubmit="window.location='http://localhost:8080'"><font size="1">(You can write up to 300 words.)<br/>
+            <textarea rows="8" cols="50" name="limitedtextarea" onKeyDown="limitText(this.form.limitedtextarea,this.form.countdown,300);" 
+             onKeyUp="limitText(this.form.limitedtextarea,this.form.countdown,300);"></textarea><br/> <input class="button" type="submit" />
+            You have <input readonly="readonly" type="text" name="countdown" size="2" value="300"> characters left. </input></font>
+             
+            </form>
+            
+            <div id="journeyID" style="visibility: hidden">#{journeyBean.selectedJourney.id}</div>
+            
+		  </div>
+		</div>
+		                         
+</div>

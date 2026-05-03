@@ -1,0 +1,56 @@
+<div xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:ice="http://www.icesoft.com/icefaces/component"
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+	 xmlns:gate11="http://www.dynatrace.com/gate11/taglib"
+     class="mainBox">
+        <h1 class="mainBoxHeader">Journey Details</h1>
+		<div class="tripDetailsHeader">
+			<div id="tenant">#{journeyBean.selectedJourney.tenant}</div>
+			<strong>#{journeyBean.selectedJourney.name}</strong>
+			<ice:panelGroup id="showratinglinks" rendered="#{journeyBean.isStartPhpServer()}" style="float:right;width:150px;">
+	       		<span style="padding-left:10px">
+	   			<h:link id="rating-details" outcome="orange-rating-results" value="Rating Details" title ="Rating Details">
+		      		<f:param name="journeyId" value="#{journeyBean.selectedJourney.id}" />
+
+	   			</h:link>
+	   		    </span>
+
+	   		    <span style="padding-left:10px">
+	   			<h:panelGroup rendered="#{loginBean.userContext.authenticated}">
+	   				<h:link id="rating-action" outcome="orange-rating-action" value="Rating" title ="Rating">
+			      		<f:param name="journeyId" value="#{journeyBean.selectedJourney.id}" />
+			      	    <f:param name="visible" value="#{loginBean.userContext.authenticated}" />
+	   				</h:link>
+	   			</h:panelGroup>
+	   		    </span>
+   		    </ice:panelGroup> 
+		</div>
+
+		<ice:graphicImage styleClass="bookReviewImage" value="img/booking/Booking_transaction_picture_page2.png" />
+
+		<ice:panelGroup styleClass="bookNewJourneyBox">
+			<h:link id="bookReviewNewSearch" outcome="orange" class="commonButton grayButton3 bookNewSearchButton" value="New Search" />
+			To look for a different journey please press the <strong>New Search</strong> button.
+		</ice:panelGroup>
+		<div class="bookReviewBox">
+			<gate11:tripDetailsPanel journeyAccount="#{bookingBean.accountMap[journeyBean.selectedJourney]}" reportStringLabel="tripdestination" />
+		</div>
+        <h:link id="tripDetailsNewSearch" outcome="orange" class="commonButton grayButton2 mainBoxButton backButton" value="New Search" />
+
+       <ice:panelGroup id="showratinglinks3" rendered="#{journeyBean.isStartPhpServer()}"  >
+		<span style="float:left;width:240px;padding-top:330px;padding-left:180px"> 
+   	  	<a href="/blog/wp-admin/post-new.php?post_title=#{journeyBean.selectedJourney.name}&#32;trip&#32;details&#38;category=Trip&#32;details&#38;tags=#{journeyBean.selectedJourney.id}" name="Link to add Post for Journey no. #{journeyBean.selectedJourney.id}" target="_blank">Add new post</a>
+   	  	</span>
+   	  	</ice:panelGroup>
+       	<ice:panelGroup id="showratinglinks2" rendered="#{journeyBean.areWordpressPostPresent(JOURNEY_ID)}" >
+	    	<span style="float:left;width:240px;padding-left:180px"> 	   			
+	   		 <a href="/blog/?tag=#{journeyBean.selectedJourney.id}" name="Link to Posts with tag nr :#{journeyBean.selectedJourney.id}" target="_blank">Posts</a>     
+			</span>    		
+   	  	</ice:panelGroup>		
+ 		     
+        <h:link id="tripDetailsBook" outcome="orange-booking-review" class="commonButton orangeButton1 mainBoxButton nextButton" value="Book Now">
+	    	<f:param name="journeyId" value="#{journeyBean.selectedJourney.id}" />
+        </h:link>       
+</div>

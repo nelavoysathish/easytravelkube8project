@@ -25,7 +25,7 @@ spec:
         environment: {{ .Values.environment }}
     spec:
       imagePullSecrets:
-        - name: dockerhub-secret      
+        - name: acr-secret      
       containers:
       - name: frontend
         image: "{{ .Values.frontend.image.repository }}:{{ .Values.frontend.image.tag }}"

@@ -1,0 +1,17 @@
+<!-- Component that renders the 4 booking steps:
+	 Paramters:
+	 - int activeStep  The active step number (1..4)
+ -->
+<ol xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:ice="http://www.icesoft.com/icefaces/component"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        class="bookStepBar"
+        id="bookStepBar">
+        
+       	<li class="active_#{activeStep eq 1}" id="bookStep1" title="Logged in as: #{loginBean.userContext.validUserName} (#{loginBean.userContext.fullName})">Log In</li>
+       	<li class="active_#{activeStep eq 2}" id="bookStep2">Review</li>
+       	<li class="active_#{activeStep eq 3}" id="bookStep3">Payment</li>
+       	<li class="active_#{activeStep eq 4}" id="bookStep4">Finish</li>
+</ol>

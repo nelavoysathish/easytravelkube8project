@@ -1,0 +1,26 @@
+<div    xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:ice="http://www.icesoft.com/icefaces/component"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:fb="http://www.facebook.com/2008/fbml"
+        xmlns:og="http://ogp.me/ns#">
+        
+	<ice:panelGrid columns="2">
+		<ice:outputLabel value="delaytime [ms]:" for="delaytime" styleClass=""/>
+		 <ice:inputText id="delaytime" value="#{searchDelayStateBean.delaytime}" partialSubmit="true" title="Time to delay the search for journeys in milliseconds. 0 disables delays.">
+			<f:converter converterId="javax.faces.Integer"/>
+			<f:validateLongRange maximum="100000" minimum="0"/>
+			</ice:inputText>
+<!-- 			
+			<ice:outputLabel value="busy waiting:"/>
+			<ice:selectBooleanCheckbox id="useBusyWaiting" value="#{searchDelayStateBean.useBusyWaiting}" 
+			title="consume cpu time yes/no"
+			partialSubmit="true"/>
+-->
+		<ice:outputLabel value="wait strategy:" />
+		<ice:selectOneMenu id="waitingStrategy" value="#{searchDelayStateBean.waitingStrategy}" partialSubmit="true">
+			<f:selectItems value="#{searchDelayStateBean.waitSelectItems}" />
+		</ice:selectOneMenu>
+	</ice:panelGrid>	
+</div>

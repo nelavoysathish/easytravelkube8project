@@ -1,0 +1,42 @@
+<div xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:ice="http://www.icesoft.com/icefaces/component"
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+	 xmlns:gate11="http://www.dynatrace.com/gate11/taglib"
+     class="mainBox">
+        
+        <h1 class="mainBoxHeader">Rating Details</h1>
+		
+		<div class="tripDetailsHeader">
+			<div id="tenant">#{journeyBean.selectedJourney.tenant}</div>
+			<strong>#{journeyBean.selectedJourney.name}</strong>
+			<ice:panelGroup id="showratinglinks" visible="#{journeyBean.isStartPhpServer()}" style="float:right;width:150px;">
+	       		<span style="padding-left:10px">
+	   			<h:link id="rating-details" outcome="orange-rating-results" value="Rating Details" tilte ="Rating Details">
+		      		<f:param name="journeyId" value="#{journeyBean.selectedJourney.id}" />
+	   			</h:link>
+	   		    </span>
+	   		    
+	   		    <span style="padding-left:10px">
+	   		    <h:panelGroup rendered="#{loginBean.getUserContext().isAuthenticated()}">
+	   				<h:link id="rating-action" outcome="orange-rating-action" value="Rating" tilte ="Rating">
+		      		<f:param name="journeyId" value="#{journeyBean.selectedJourney.id}" />
+	   				</h:link>
+	   			</h:panelGroup>
+	   		    </span>
+   		    </ice:panelGroup>   
+		</div>  
+	   
+        <div class="ratingScrollBox">
+	        <div class="ratingTextBox">                 
+		        <div class="journeyID" style="visibility: hidden" rel="#{journeyBean.selectedJourney.id}"></div>                  
+                <div id="details"></div>
+          
+                <br /><br />
+	            <!-- display the comments -->
+	            <div id="content"></div>
+	            <input type="hidden" name="page_count" id="page_count" />
+		   </div>
+	  </div> 	                         
+</div>

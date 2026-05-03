@@ -1,0 +1,37 @@
+<div xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:ice="http://www.icesoft.com/icefaces/component"
+		xmlns:gate11="http://www.dynatrace.com/gate11/taglib"
+        xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<ice:panelTooltip id="promotionTip" styleClass="tripDetailsTip" draggable="false" displayOn="click" hideOn="mousedown" rendered="#{not empty adBean.currentPromotion.journey}">
+		<f:facet name="body">
+			<gate11:tripDetailsPanel journeyAccount="#{bookingBean.accountMap[adBean.currentPromotion.journey]}" showBookButton="true" showDetailsLink="true" reportStringLabel="promotion" />
+		</f:facet>
+	</ice:panelTooltip>
+	<h:outputScript>
+		
+		rumapi.incrementOnLoadEndMarkers();
+		var imageHasLoaded = false;
+		function onResultImageLoaded(imgRef){
+			if(!imageHasLoaded &amp;&amp; window.performance &amp;&amp; window.performance.mark){
+				window.performance.mark('mark_recommendations_loaded');
+				imageHasLoaded = true;
+				setTimeout(function(){
+					rumapi.signalOnLoadEnd();
+				}, 50);
+			}
+		}
+
+	</h:outputScript>
+	<ice:panelGroup styleClass="orangeImage headerImgHolder" panelTooltip="promotionTip" id="headerImgHolder">
+		<ice:commandLink action="#{adBean.clickImage}">
+			<ice:graphicImage value="img/header1.png" id="headerImg" />
+		</ice:commandLink>
+		<ice:graphicImage value="img/promotion/banner.png" styleClass="banner"/>
+		<ice:graphicImage value="img/promotion/banner_#{adBean.currentPromotion.location}.png" styleClass="banner"/>
+	</ice:panelGroup>
+
+	<ice:outputText value="#{streamingMediaBean.homepage}" escape="false" nospan="true"/>
+</div>

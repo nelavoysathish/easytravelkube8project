@@ -1,0 +1,390 @@
+<?xml version="1.0"?>
+
+<!--
+  ~ Version: MPL 1.1
+  ~
+  ~ "The contents of this file are subject to the Mozilla Public License
+  ~ Version 1.1 (the "License"); you may not use this file except in
+  ~ compliance with the License. You may obtain a copy of the License at
+  ~ http://www.mozilla.org/MPL/
+  ~
+  ~ Software distributed under the License is distributed on an "AS IS"
+  ~ basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
+  ~ License for the specific language governing rights and limitations under
+  ~ the License.
+  ~
+  ~ The Original Code is ICEfaces 1.5 open source software code, released
+  ~ November 5, 2006. The Initial Developer of the Original Code is ICEsoft
+  ~ Technologies Canada, Corp. Portions created by ICEsoft are Copyright (C)
+  ~ 2004-2010 ICEsoft Technologies Canada, Corp. All Rights Reserved.
+  ~
+  ~ Contributor(s): _____________________.
+  ~
+  -->
+
+<!-- The option metadata-complete="true" was added due to problems with servlet 3 annotations.
+	 (See JLT-73104.) This option causes Servlet 3 annotations to be disabled.
+	 Consequently, make sure all Servlets are specified in the web.xml.
+-->
+<web-app version="3.0"
+         xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+         metadata-complete="true">
+	<display-name>Sathish Travels Customer Frontend</display-name>
+
+	<description>
+    	dynaTrace EasyTravel demo app
+    </description>
+
+	<context-param>
+		<param-name>javax.faces.STATE_SAVING_METHOD</param-name>
+		<param-value>server</param-value>
+	</context-param>
+
+	<context-param>
+		<param-name>javax.faces.PROJECT_STAGE</param-name>
+		<param-value>Production</param-value>
+	</context-param>
+
+	<context-param>
+		<param-name>javax.faces.VALIDATE_EMPTY_FIELDS</param-name>
+		<param-value>false</param-value>
+	</context-param>
+
+	<!-- Used for testing memory usage of ICEfaces,
+		see http://wiki.icefaces.org/display/ICE/Configuration
+
+		this also requires
+				<fileset file="${ICEFACES_HOME}/FastInfoset.jar" />
+		in CustomerFrontend/build.xml
+	-->
+    <!--context-param>
+        <param-name>org.icefaces.compressDOM</param-name>
+        <param-value>true</param-value>
+    </context-param>
+    <context-param>
+        <param-name>org.icefaces.strictSessionTimeout</param-name>
+        <param-value>true</param-value>
+    </context-param-->
+
+    <!-- Note: setting this parameter will enable Google maps integration and will
+    cause stuff to be loaded from maps.google.com, maps.gstatic.com and probably others.
+    This can slow down initial page loading on slower Internet connections.
+    <context-param>
+        <param-name>com.icesoft.faces.gmapKey</param-name>
+        <param-value>ABQIAAAADlu0ZiSTam64EKaCQr9eTRTOTuQNzJNXRlYRLknj4cQ89tFfpxTEqxQnVWL4k55OPICgF5_SOZE06A
+        </param-value>
+    </context-param-->
+
+	<context-param>
+		<param-name>com.icesoft.faces.uploadDirectory</param-name>
+		<param-value>upload</param-value>
+	</context-param>
+
+	<context-param>
+		<param-name>javax.faces.FACELETS_SKIP_COMMENTS</param-name>
+		<param-value>true</param-value>
+	</context-param>
+
+	<context-param>
+		<param-name>javax.faces.FACELETS_LIBRARIES</param-name>
+		<param-value>/WEB-INF/gate11.taglib.xml</param-value>
+	</context-param>
+
+	<context-param>
+		<param-name>extension.point.start</param-name>
+		<param-value>lifecycle.frontend.start</param-value>
+	</context-param>
+
+	<context-param>
+		<param-name>extension.point.shutdown</param-name>
+		<param-value>lifecycle.frontend.shutdown</param-value>
+	</context-param>
+
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>/WEB-INF/spring/root-context.xml</param-value>
+	</context-param>
+
+	<!-- recommended if ICEpush is not used -->
+	<context-param>
+		<param-name>com.icesoft.faces.synchronousUpdate</param-name>
+		<param-value>true</param-value>
+	</context-param>
+
+	<!-- See http://www.icefaces.org/docs/v1_8_2/htmlguide/devguide/keyConcepts11.html -->
+	<context-param>
+		<param-name>com.icesoft.faces.concurrentDOMView</param-name>
+		<param-value>true</param-value>
+	</context-param>
+
+	<filter>
+		<filter-name>LogoutFilter</filter-name>
+		<filter-class>com.dynatrace.easytravel.frontend.servlet.LogoutFilter</filter-class>
+	</filter>
+
+	<filter>
+		<filter-name>CachingFilter</filter-name>
+		<filter-class>com.dynatrace.easytravel.frontend.servlet.CachingFilter</filter-class>
+	</filter>
+
+	<filter>
+	   <filter-name>ResourcesFilter</filter-name>
+	   <filter-class>com.dynatrace.easytravel.plugin.slowimages.ResourcesFilter</filter-class>
+       <!-- defining max. delay of images in milliseconds -->
+	   <init-param>
+	      <param-name>maxdelay</param-name>
+	      <param-value>1500</param-value>
+	   </init-param>
+	</filter>
+
+	<filter-mapping>
+		<filter-name>LogoutFilter</filter-name>
+		<url-pattern>/j_invalidate_session</url-pattern>
+	</filter-mapping>
+
+	<filter-mapping>
+		<filter-name>CachingFilter</filter-name>
+		<url-pattern>*.html</url-pattern>
+  		<url-pattern>*.png</url-pattern>
+		<url-pattern>*.js</url-pattern>
+		<url-pattern>*.css</url-pattern>
+	</filter-mapping>
+
+	<filter-mapping>
+		<filter-name>ResourcesFilter</filter-name>
+		<url-pattern>/img/*</url-pattern>
+	</filter-mapping>
+
+	<listener>
+      <listener-class>com.dynatrace.easytravel.spring.CustomLoaderListener</listener-class>
+   </listener>
+
+   <listener>
+      <listener-class>com.dynatrace.easytravel.frontend.servlet.ShutdownListener</listener-class>
+   </listener>
+
+   <listener>
+      <listener-class>com.dynatrace.easytravel.spring.ContextStateListener</listener-class>
+   </listener>
+
+    <listener>
+        <listener-class>
+            com.dynatrace.easytravel.metrics.MetricsServletInit
+        </listener-class>
+    </listener>
+
+	<servlet>
+		<servlet-name>Faces Servlet</servlet-name>
+		<servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet>
+		<servlet-name>Image Servlet</servlet-name>
+		<servlet-class>com.dynatrace.easytravel.frontend.servlet.ImageServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet>
+		<servlet-name>Resource Servlet</servlet-name>
+		<servlet-class>com.icesoft.faces.webapp.CompatResourceServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<!-- add a servlet that services plugins -->
+	<servlet>
+		<servlet-name>Plugin Servlet</servlet-name>
+		<servlet-class>com.dynatrace.easytravel.frontend.servlet.PluginServlet</servlet-class>
+		<init-param>
+			<param-name>prefix</param-name>
+			<param-value>plugins/</param-value>
+		</init-param>
+		<init-param>
+			<param-name>dynamicSuffix</param-name>
+			<param-value>html,js,txt</param-value>
+		</init-param>
+		<init-param>
+			<param-name>downloadSuffix</param-name>
+			<param-value>txt</param-value>
+		</init-param>
+		<init-param>
+			<param-name>redirectURL</param-name>
+			<param-value></param-value>
+		</init-param>
+		<init-param>
+			<param-name>varRegex</param-name>
+			<param-value>\#\{((\w+(\.\w+)*))+\}</param-value>
+		</init-param>
+		<init-param>
+			<param-name>exprRegex</param-name>
+			<param-value>(?s)\#\{\((.*?)\)\}</param-value>
+			<!-- dotall (?s) with reluctant quantifiers *? and one matching group:
+				the property -->
+		</init-param>
+		<init-param>
+			<param-name>ifRegex</param-name>
+			<param-value>(?s)\#\{if\s*([^\s]*)\s*(.*?)\}</param-value>
+			<!-- dotall (?s) with greedy quantifiers * and two matching groups: the
+				ifCondition and the ifBody -->
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet>
+		<servlet-name>Redirect Servlet</servlet-name>
+		<servlet-class>com.dynatrace.easytravel.frontend.servlet.RedirectServlet</servlet-class>
+		<init-param>
+			<param-name>prefix</param-name>
+			<param-value>redirect/</param-value>
+		</init-param>
+	</servlet>
+
+	<servlet>
+		<servlet-name>Backend Services Servlet</servlet-name>
+		<servlet-class>com.dynatrace.easytravel.frontend.servlet.BackendServicesServlet</servlet-class>
+	</servlet>
+
+	<servlet>
+		<servlet-name>Recommendation Servlet</servlet-name>
+		<servlet-class>com.dynatrace.easytravel.frontend.servlet.CalculateRecommendations</servlet-class>
+		<async-supported>true</async-supported>
+	</servlet>
+	
+	<servlet>
+		<servlet-name>Rental Car Authentication Servlet</servlet-name>
+		<servlet-class>com.dynatrace.easytravel.frontend.servlet.RentalCarAuthentication</servlet-class>
+		<async-supported>true</async-supported>
+	</servlet>
+	
+	<servlet>
+		<servlet-name>Rental Car Crash Report Servlet</servlet-name>
+		<servlet-class>com.dynatrace.easytravel.frontend.servlet.RentalCarCrashReport</servlet-class>
+		<async-supported>true</async-supported>
+	</servlet>
+
+	<servlet>
+		<servlet-name>Special Offers Servlet</servlet-name>
+		<servlet-class>com.dynatrace.easytravel.frontend.servlet.CreateSpecialOffers</servlet-class>
+		<async-supported>true</async-supported>
+	</servlet>
+
+    <servlet>
+		<servlet-name>Ads Servlet</servlet-name>
+		<servlet-class>com.dynatrace.easytravel.frontend.servlet.AdsForBlog</servlet-class>
+		<async-supported>true</async-supported>
+	</servlet>
+	<servlet>
+		<servlet-name>Error Servlet</servlet-name>
+		<servlet-class>com.dynatrace.easytravel.frontend.servlet.ErrorServlet</servlet-class>
+	</servlet>
+    <!-- Metrics provider -->
+    <servlet>
+        <servlet-name>metrics</servlet-name>
+        <servlet-class>com.codahale.metrics.servlets.MetricsServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>threads</servlet-name>
+        <servlet-class>com.codahale.metrics.servlets.ThreadDumpServlet</servlet-class>
+    </servlet>
+	<servlet-mapping>
+		<servlet-name>Image Servlet</servlet-name>
+		<url-pattern>*.png</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>Image Servlet</servlet-name>
+		<url-pattern>*.jpg</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>Faces Servlet</servlet-name>
+		<url-pattern>*.jsf</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>Faces Servlet</servlet-name>
+		<url-pattern>*.xhtml</url-pattern>
+	</servlet-mapping>
+	<!--  needed to deliver Sathish Travels.plist file for Apple iOS -->
+	<servlet-mapping>
+		<servlet-name>Faces Servlet</servlet-name>
+		<url-pattern>*.plist</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>Faces Servlet</servlet-name>
+		<url-pattern>/icefaces/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>Resource Servlet</servlet-name>
+		<url-pattern>/xmlhttp/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>Plugin Servlet</servlet-name>
+		<url-pattern>/plugins/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>Redirect Servlet</servlet-name>
+		<url-pattern>/redirect/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>Backend Services Servlet</servlet-name>
+		<url-pattern>/services/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>Recommendation Servlet</servlet-name>
+		<url-pattern>/CalculateRecommendations</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>Special Offers Servlet</servlet-name>
+		<url-pattern>/CreateSpecialOffers</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>Rental Car Authentication Servlet</servlet-name>
+		<url-pattern>/RentalCarAuthentication</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>Rental Car Crash Report Servlet</servlet-name>
+		<url-pattern>/RentalCarCrashReport</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>Ads Servlet</servlet-name>
+		<url-pattern>/AdsForBlog</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>Error Servlet</servlet-name>
+		<url-pattern>/error500</url-pattern>
+	</servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>metrics</servlet-name>
+        <url-pattern>/metrics</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>threads</servlet-name>
+        <url-pattern>/threads</url-pattern>
+    </servlet-mapping>
+
+    <session-config>
+		<session-timeout>30</session-timeout>
+	</session-config>
+
+    <mime-mapping>
+        <extension>plist</extension>
+        <mime-type>application/x-plist</mime-type>
+    </mime-mapping>
+
+	<welcome-file-list>
+		<welcome-file>orange.jsf</welcome-file>
+	</welcome-file-list>
+</web-app>

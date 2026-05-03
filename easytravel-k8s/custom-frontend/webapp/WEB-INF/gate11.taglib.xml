@@ -1,0 +1,22 @@
+<!DOCTYPE facelet-taglib PUBLIC "-//Sun Microsystems, Inc.//DTD Facelet Taglib 1.0//EN" "http://java.sun.com/dtd/facelet-taglib_1_0.dtd">
+<facelet-taglib>
+	<namespace>http://www.dynatrace.com/gate11/taglib</namespace>
+
+	<tag>
+		<tag-name>journeyPager</tag-name>
+		<source>includes/components/journeyPager.xhtml</source>
+	</tag>	
+	<tag>
+		<tag-name>tripDetailsPanel</tag-name>
+		<source>includes/components/tripDetailsPanel.xhtml</source>
+	</tag>	
+	<tag>
+		<tag-name>bookingStepIndicator</tag-name>
+		<source>includes/components/bookingStepIndicator.xhtml</source>
+	</tag>	
+	<tag>
+		<tag-name>userListPanel</tag-name>
+		<source>includes/components/userListPanel.xhtml</source>
+	</tag>
+
+</facelet-taglib>

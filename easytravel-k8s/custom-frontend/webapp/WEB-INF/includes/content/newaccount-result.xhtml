@@ -1,0 +1,35 @@
+<div xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:ice="http://www.icesoft.com/icefaces/component"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        class="mainBox">
+
+        <h1 class="mainBoxHeader">Create New Account</h1>
+		<ice:graphicImage styleClass="newAccImage" value="img/newaccount/easyTravel_CreateNewLogin_Header.png" />
+
+		<div class="newAccResult">
+			<div class="heading"><ice:outputText>Account Created</ice:outputText></div>
+			<div>
+				<ice:outputText>
+					<p>
+						Welcome, <strong>#{loginBean.userContext.fullName}</strong>!<br/>
+						Your account has been successfully created.<br/>
+		  				You are logged in as: <strong>#{loginBean.userContext.userName}</strong><br/>
+		  				Your password is: <strong>#{loginBean.userContext.password}</strong>
+	  				</p>
+	  				<p>
+	  					If you have any questions about your account, email us at <a href="mailto:easytravel@dynatrace.com">support@easytravel</a>
+	  				</p>
+				</ice:outputText>
+			</div>
+			<script type="text/javascript">
+				rumapi.tagVisit('#{loginBean.userContext.userName}');
+			</script>
+		</div>
+
+		<h:link id="newAccountNewSearch" outcome="orange" class="commonButton orangeButton2 mainBoxButton nextButton" value="New Search" rendered="#{not bookingBean.stateValid}"/>
+		<h:link id="newAccountNext" outcome="orange-booking-review" class="commonButton orangeButton1 mainBoxButton nextButton" value="Next" rendered="#{bookingBean.stateValid}">
+		      <f:param name="journeyId" value="#{bookingBean.selectedJourney.id}" />
+		</h:link>
+</div>

@@ -1,0 +1,90 @@
+<div xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:ice="http://www.icesoft.com/icefaces/component"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+		xmlns:gate11="http://www.dynatrace.com/gate11/taglib"
+        class="mainBox">
+
+        <h1 class="mainBoxHeader">Booking Transaction</h1>
+        <gate11:bookingStepIndicator activeStep="3"/>
+
+        <ice:panelGroup styleClass="bookPaymentBox">
+
+			<p class="heading">Credit Card Information
+				<ice:graphicImage value="img/booking/Booking_transaction_VersiSign.png" />
+			</p>
+			<ice:outputText value="(Secure SSL Encrypted Transaction)"/>
+
+			<ice:panelGrid columns="2" cellspacing="3">
+				<ice:outputLabel for="creditCardType" value="Credit Card Type" styleClass="required"/>
+				<ice:panelGroup>
+					<ice:selectOneMenu id="creditCardType" value="#{bookingRequestBean.creditCardType}" styleClass="bookPaymentSelectLarge">
+						<f:selectItem itemLabel="VISA" />
+						<f:selectItem itemLabel="MasterCard" />
+						<f:selectItem itemLabel="Diner's Club" />
+						<f:selectItem itemLabel="AmEx" />
+					</ice:selectOneMenu>
+					<ice:graphicImage value="img/booking/Booking_transaction_creditcards.png" />
+				</ice:panelGroup>
+
+				<ice:outputLabel for="creditCardNumber" value="Credit Card Number" styleClass="required"/>
+				<ice:inputText id="creditCardNumber" value="#{bookingRequestBean.creditCardNumber}" styleClass="bookPaymentInputLarge"/>
+
+				<ice:outputLabel for="creditCardOwner" value="Card Owner's Name" styleClass="required"/>
+				<ice:panelGroup>
+					<ice:inputText id="creditCardOwner" value="#{bookingRequestBean.creditCardOwner}" styleClass="bookPaymentInputLarge"/>
+					<ice:outputText value=" (As it appears on your credit card)" />
+				</ice:panelGroup>
+
+				<ice:outputLabel for="expirationMonth" value="Expiration Date" styleClass="required"/>
+				<ice:panelGroup>
+					<ice:selectOneMenu id="expirationMonth" value="#{bookingRequestBean.expirationMonth}" styleClass="bookPaymentSelectLarge">
+						<f:selectItem itemLabel="Month" itemValue=""/>
+						<f:selectItem itemLabel="January" />
+						<f:selectItem itemLabel="February" />
+						<f:selectItem itemLabel="March" />
+						<f:selectItem itemLabel="April" />
+						<f:selectItem itemLabel="May" />
+						<f:selectItem itemLabel="June" />
+						<f:selectItem itemLabel="July" />
+						<f:selectItem itemLabel="August" />
+						<f:selectItem itemLabel="September" />
+						<f:selectItem itemLabel="October" />
+						<f:selectItem itemLabel="November" />
+						<f:selectItem itemLabel="December" />
+					</ice:selectOneMenu>
+					<ice:selectOneMenu id="expirationYear" value="#{bookingRequestBean.expirationYear}" styleClass="bookPaymentSelectSmall">
+						<f:selectItems value="#{bookingRequestBean.validYears}"/>
+					</ice:selectOneMenu>
+					<ice:outputText value=" (Please ensure expiration date is correct)"/>
+				</ice:panelGroup>
+
+				<ice:outputLabel for="verificationNumber" value="Verification Number" styleClass="required"/>
+				<ice:panelGroup>
+					<ice:inputText id="verificationNumber" value="#{bookingRequestBean.verificationNumber}" styleClass="bookPaymentInputSmall"/>
+					<ice:graphicImage value="img/booking/Booking_transaction_creditcode.png"/>
+					<ice:outputText value=" (3 or 4 digit number from your card)"/>
+				</ice:panelGroup>
+			</ice:panelGrid>
+
+		   <!--  needed for problem pattern "TravellersError500" -->
+		   <ice:outputFormat value="#{dataBean.costFormat}" style="display:none">
+				<f:param value="#{bookingBean.accountMap[bookingBean.selectedJourney].totalCosts}"/>
+			</ice:outputFormat>
+
+			<ice:panelGroup styleClass="bookPaymentInputError" rendered="#{bookingRequestBean.inputError}">
+				<ice:messages />
+			</ice:panelGroup>
+        </ice:panelGroup>
+
+		<div class="required">
+			<ice:outputText value="Requried" />
+		</div>
+		<div class="privacyPolicy">
+			<ice:commandButton value="Privacy Policy Image" image="img/privacypolicy_lock.png" action="#{bookingRequestBean.fillMock}"/>
+			<ice:commandLink value="Privacy Policy" action="#{bookingRequestBean.fillMock}" id="fillMock"/>
+		</div>
+		<h:link id="bookPaymentBack" outcome="orange-booking-review" includeViewParams="true" class="commonButton grayButton1 mainBoxButton backButton" value="Back" />
+		<ice:commandButton id="bookPaymentNext" styleClass="commonButton orangeButton1 mainBoxButton nextButton" value="Next" action="#{bookingRequestBean.validatePayment}" rendered="#{bookingBean.stateValid}"/>
+</div>

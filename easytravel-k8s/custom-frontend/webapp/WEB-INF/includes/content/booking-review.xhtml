@@ -1,0 +1,22 @@
+<div xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:ice="http://www.icesoft.com/icefaces/component"
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+	 xmlns:gate11="http://www.dynatrace.com/gate11/taglib"
+     class="mainBox">
+
+        <h1 class="mainBoxHeader">Booking Transaction</h1>
+        <gate11:bookingStepIndicator activeStep="2"/>
+		<ice:graphicImage styleClass="bookReviewImage" value="img/booking/Booking_transaction_picture_page2.png" />
+
+		<ice:panelGroup styleClass="bookNewJourneyBox">
+			<h:link id="bookReviewNewSearch" outcome="orange" class="commonButton grayButton3 bookNewSearchButton" value="New Search" />
+			<div>To look for a different journey please press the <strong>New Search</strong> button.</div>
+		</ice:panelGroup>
+		<div class="bookReviewBox">
+			<gate11:tripDetailsPanel journeyAccount="#{bookingBean.accountMap[bookingBean.selectedJourney]}" showDetailsLink="true" reportStringLabel="tripdestination" />
+		</div>
+        <h:link id="bookReviewBack" outcome="orange-booking-login" includeViewParams="true" class="commonButton grayButton1 mainBoxButton backButton" value="Back" />
+        <h:link id="bookReviewNext" outcome="orange-booking-payment" includeViewParams="true" class="commonButton orangeButton1 mainBoxButton nextButton" value="Next" rendered="#{bookingBean.stateValid}"/>
+</div>

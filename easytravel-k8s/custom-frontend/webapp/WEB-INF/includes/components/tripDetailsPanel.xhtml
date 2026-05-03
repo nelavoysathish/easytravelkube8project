@@ -1,0 +1,99 @@
+<!-- Component that renders a trip details panel
+	 Paramters:
+	 - JourneyAccount journeyAccount  the JourneyAsset object for the displayed journey
+	 - boolean showBookButton     if true, show the [Book Now] button
+	 - boolean showDetailsLink    if true, render the journey name as a link to the trip-details page
+	 - string reportStringLabel   name that should be used for reporting this destination to the server using the adk
+ -->
+<ice:panelGrid xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:ice="http://www.icesoft.com/icefaces/component"
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+	 xmlns:gate11="http://www.dynatrace.com/gate11/taglib"
+	 styleClass="tripDetailsPanel"
+     columns="2"
+     columnClasses="label,data"
+     rendered="#{not empty journeyAccount}">
+
+       	<ice:outputLabel styleClass="heading">Trip details</ice:outputLabel>
+       	<ice:outputLabel /><!--  spacer -->
+        <ice:panelGroup id="showrating" rendered="#{journeyBean.isStartPhpServer()}">
+		    <div class="rate_widget rating_#{journeyAccount.journey.id}" rel="#{journeyAccount.journey.id}" style="color: #28A6BB;">
+		   	   <div class="total_votes"></div>
+		    </div>
+
+			<script type="text/javascript">
+			    $('.tripDetailsPanel .rate_widget').each(function(i) {
+				    getAverageTotal($(this));
+				});
+			</script>
+	    </ice:panelGroup>
+
+	    <ice:outputLabel rendered="#{!journeyBean.isStartPhpServer()}" /><!--  spacer -->
+	    <ice:outputLabel /><!--  spacer -->
+   		<ice:outputLabel value="Journey" />
+   		<ice:outputText rendered="#{showDetailsLink}">
+   			<h:link id="popupDetailsLink" outcome="orange-trip-details" value="#{journeyAccount.journey.name}" title="Click for trip details">
+	      		<f:param name="journeyId" value="#{journeyAccount.journey.id}" />
+   			</h:link>
+   		</ice:outputText>
+   		<ice:outputText rendered="#{not showDetailsLink}">#{journeyAccount.journey.name}</ice:outputText>
+
+   		<ice:outputLabel value="Destination" />
+   		<ice:outputText>#{journeyAccount.journey.destination}</ice:outputText>
+
+   		<ice:outputLabel value="Tenant" />
+   		<ice:outputText>#{journeyAccount.journey.tenant}</ice:outputText>
+
+       	<ice:outputLabel for="travellers">Travellers</ice:outputLabel>
+		<ice:selectOneMenu id="travellers" value="#{journeyAccount.travellers}" styleClass="bookPaymentSelectLarge" partialSubmit="true">
+			<f:selectItems value="#{journeyAccount.travellersSelectList}" />
+		</ice:selectOneMenu>
+
+       	<ice:outputLabel styleClass="heading">Flight price</ice:outputLabel>
+       	<ice:outputLabel /><!--  spacer -->
+
+   		<ice:outputLabel value="Round-trip ticket" />
+   		<ice:outputFormat value="#{dataBean.costFormat}">
+			<f:param value="#{journeyAccount.flightCosts}"/>
+		</ice:outputFormat>
+
+       	<ice:outputLabel styleClass="heading">Hotel price</ice:outputLabel>
+       	<ice:outputLabel /><!--  spacer -->
+
+   		<ice:outputLabel value="1 room, #{journeyAccount.travellingNights} nights"/>
+ 		<ice:outputFormat value="#{dataBean.costFormat}">
+ 			<f:param value="#{journeyAccount.hotelCosts}"/>
+ 		</ice:outputFormat>
+
+   		<ice:outputLabel value="Taxes and fees" />
+   		 <ice:outputFormat value="#{dataBean.costFormat}">
+			<f:param value="#{journeyAccount.taxesAndFees}"/>
+		</ice:outputFormat>
+
+       	<ice:outputLabel styleClass="heading">Total</ice:outputLabel>
+   		<ice:outputFormat value="#{dataBean.costFormat}" styleClass="totalCosts">
+			<f:param value="#{journeyAccount.totalCosts}"/>
+		</ice:outputFormat>
+
+      	<ice:outputLabel value="Avg/person" />
+        <ice:outputFormat value="#{dataBean.costFormat}">
+			<f:param value="#{journeyAccount.avgPerPerson}"/>
+		</ice:outputFormat>
+
+		<ice:panelGroup rendered="#{not empty reportStringLabel}">
+	   		<script type="text/javascript">
+	   		$(function() {
+			    rumapi.reportString('#{reportStringLabel}', '#{journeyAccount.journey.destination}');
+			    rumapi.reportValue('totalcost', '#{journeyAccount.totalCosts}'); 
+	   		});
+	   		</script>
+	   	</ice:panelGroup>
+
+       	<ice:panelGroup rendered="#{showBookButton}" styleClass="journeyBookSpacer"/><!--  spacer -->
+      	<h:link id="popupBookLink" rendered="#{showBookButton}" outcome="orange-booking-review" value="Book Now" class="commonButton orangeButton1 journeyBookButton journeyBooked_#{bookingBean.bookingMap[journeyAccount.journey]}">
+      		<f:param name="journeyId" value="#{journeyAccount.journey.id}" />
+      	</h:link>
+
+</ice:panelGrid>

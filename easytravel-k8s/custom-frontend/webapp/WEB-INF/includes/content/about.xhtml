@@ -1,0 +1,74 @@
+<div    xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:ice="http://www.icesoft.com/icefaces/component"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:fb="http://www.facebook.com/2008/fbml"
+        xmlns:og="http://ogp.me/ns#"
+        class="mainBox">
+
+    <h1 class="mainBoxHeader">About easyTravel</h1>
+    <div class="mainScrollBox">
+	    <div class="mainTextBox">
+			<p>easyTravel provides a web portal which allows users to log in, search for journeys to various destinations, select special offers and promotional journeys and purchase a journey using a credit card.</p>
+			<p>The application demonstrates the functionality of <a href="https://www.dynatrace.com/en/products/application-monitoring.html">Dynatrace APM products</a>.</p>
+
+			<ice:panelCollapsible style="width:300px;margin-top:10px" expanded="true">
+				<f:facet name="header">
+					<ice:panelGroup><ice:outputText value="Problem pattern-settings" /></ice:panelGroup>
+				</f:facet>
+				<ui:include src="searchdelay.xhtml" />
+			</ice:panelCollapsible>
+
+			<script type="text/javascript">
+				$(function() {
+					setTimeout(function() {
+						var actionId = rumapi.enterAction('Longer stay', 'custom');
+						var randomTime = Math.floor(Math.random() * 1000);
+						setTimeout(function() {
+							rumapi.leaveAction(actionId);
+						}, randomTime);
+					}, 10000);
+				});
+			</script>
+
+			<p style="float:right;font-size: 8px;">Contains <a href="http://www.photoeverywhere.co.uk">images by photoeverywhere.co.uk</a>.</p>
+			
+			<div>
+				<p>
+					<b>easyTravel</b>
+				</p>
+				<p>Version: <span class="version">#{adBean.version}</span></p>
+				<p>Build Date: <span class="string">#{adBean.buildDate}</span></p>
+			</div>
+
+			<div>
+				<p>
+					<b>iOS App Installation</b>
+				</p>
+				<p>
+					iOS 7.1+ requires the installation of the self-signed SSL-Certificate used by this site. 
+					To download it, click on this <a href="/cert/easytravel-san.crt">SSL-Certificate</a> link and then follow instructions.
+					<br/>
+					Additionally in iOS 10.3 you must manually trust this certificate: go to Settings -> General -> About -> Certificate Trust Settings and toggle: 'Enable Full Trust For Root Certificates'
+					<br/>
+					After installing the application, the certificate can be deleted at Settings -> General -> Profiles -> Configuration Profiles.
+					<br/>
+					Last step is to trust the application: go to Settings -> General -> Profiles &amp; Device Managment, click on Dynatrace LLC enterprise APP and select Trust "Dynatrace LCC"				
+					<br/>					
+					Certificate is generated automatically and it requires installed OpenSSL on Linux ( we provide OpenSSL binaries for Windows with easyTravel).
+					Remember to set config.apacheWebServerSslHost property in easyTravelLocal.properties file to match your address.										
+				</p>
+			</div>
+			<div>
+				<p>
+					<b>De-obfuscating or symbolicating crash reports</b>
+				</p>
+				<p>
+					The Proguard mapping file for de-obfuscating easyTravel Android crash reports is available <a href="/apps/proguard/mapping.txt" download="mapping.txt">here</a>.
+					The easyTravel iOS symbol extract file is available <a href="/apps/iOSeasyTravel_symbolsExtract.zip" download="iOSeasyTravel_symbolsExtract.zip">here</a> in zip format.
+				</p>
+			</div>
+		</div>
+	</div>
+</div>

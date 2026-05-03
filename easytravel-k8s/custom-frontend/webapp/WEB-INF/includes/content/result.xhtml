@@ -1,0 +1,50 @@
+<div xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:ice="http://www.icesoft.com/icefaces/component"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+		xmlns:gate11="http://www.dynatrace.com/gate11/taglib">
+
+	<ice:outputText value="#{searchBean.beforeResults}" escape="false" nospan="true" rendered="#{not empty searchBean.journeyPage}" />
+
+   	<ice:panelPositioned value="#{searchBean.journeyPage}" var="journey" id="dataList" styleClass="resultsArea" rendered="#{not empty searchBean.journeyPage}">
+		<ice:panelGroup styleClass="resultBox" id="result">
+			<ice:panelTooltip id="tripDetailsTip" styleClass="tripDetailsTip" draggable="false" displayOn="hover" hideOn="mouseout">
+				<f:facet name="body">
+					<gate11:tripDetailsPanel journeyAccount="#{bookingBean.accountMap[journey]}" showDetailsLink="true" reportstringlabel="searchresult" />
+				</f:facet>
+			</ice:panelTooltip>
+			<ice:panelGroup styleClass="resultBoxImage" panelTooltip="tripDetailsTip">
+				<h:link id="detailsLink" outcome="orange-trip-details">
+		      		<f:param name="journeyId" value="#{journey.id}" />
+					<ice:graphicImage styleClass="etResultsImage downshadow" height="130" value="#{journey.picture}" rendered="#{not empty journey.picture}"/>
+					<ice:graphicImage styleClass="etResultsImage downshadow" height="130" url="img/#{journey.id}.jpg" rendered="#{empty journey.picture and journey.hasPicture}"/>
+					<ice:panelGroup rendered="#{empty journey.picture and not journey.hasPicture}">
+						<img src="img/result_pic_#{(journey.id % 2) + 1}.png" height="130" class="etResultsImage" alt="no image available"/>
+					</ice:panelGroup>
+				</h:link>
+			</ice:panelGroup>
+			<ice:panelGroup styleClass="resultBoxContent">
+				<ice:outputText value="#{journey.name}" styleClass="journeyName"  />
+	       		 <ice:outputFormat value="#{dataBean.costFormat}" styleClass="journeyAmount">
+	 				<f:param value="#{journey.amount}"/>
+	 			</ice:outputFormat>
+
+	 			<div class="rate_widget" style="color: #28A6BB;">
+				       <ice:outputText value="#{journey.getAverageTotal()}"/>
+				</div>
+
+				<ice:outputText value="If you wish to stay in a hotel that has friendly staff and an inviting ambience that reminds you of home, then head to the Grand Hotel." styleClass="journeyDesc" />
+				<ice:outputText value="#{searchBean.getWeatherForecastLink(journey)}" styleClass="journeyDesc" escape="false" nospan="true"/>
+				<ice:outputText value="#{journey.timeframe}" styleClass="journeyDate" />
+		      	<h:link id="bookLink" outcome="orange-booking-review" value="Book Now" class="commonButton orangeButton1 journeyBookButton journeyBooked_#{bookingBean.bookingMap[journey]}">
+		      		<f:param name="journeyId" value="#{journey.id}" />
+		      	</h:link>
+
+			</ice:panelGroup>
+		</ice:panelGroup>
+	</ice:panelPositioned>
+
+	<ice:outputText value="#{searchBean.afterResults}" escape="false" nospan="true"  rendered="#{not empty searchBean.journeyPage}"/>
+
+</div>

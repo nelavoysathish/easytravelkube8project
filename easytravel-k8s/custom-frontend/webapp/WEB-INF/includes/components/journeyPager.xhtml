@@ -1,0 +1,28 @@
+<!-- Component that renders a journey pager -->
+<div xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:ice="http://www.icesoft.com/icefaces/component"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+		xmlns:gate11="http://www.dynatrace.com/gate11/taglib">
+        
+   	<ice:panelGroup rendered="#{searchBean.journeyCount gt searchBean.defaultPageSize}" styleClass="pagingArea">
+		<div class="right">
+	   		<ice:outputLabel for="pageSize">Page Size:</ice:outputLabel>
+			<ice:selectOneMenu name="pageSize" value="#{searchBean.pageSize}" partialSubmit="true">
+				<f:selectItems value="#{searchBean.pageSizeList}"/>
+			</ice:selectOneMenu>
+		</div>
+		
+   		<div class="right">
+	   		<ice:outputLabel for="page">Select Page:</ice:outputLabel>
+	   		<ice:commandButton action="#{searchBean.prevPage}" disabled="#{searchBean.page eq 0}" image="img/pager/prev.gif"/>
+			<ice:selectOneRadio name="page" value="#{searchBean.page}" partialSubmit="true">
+				<f:selectItems value="#{searchBean.pageList}"/>
+			</ice:selectOneRadio>
+	   		<ice:commandButton action="#{searchBean.nextPage}" disabled="#{searchBean.page + 1 eq searchBean.pageCount}" image="img/pager/next.gif"/>
+		</div>
+
+   		<div class="left">Showing page <strong>#{searchBean.page + 1}</strong> of #{searchBean.pageCount}</div>
+   	</ice:panelGroup>
+</div>

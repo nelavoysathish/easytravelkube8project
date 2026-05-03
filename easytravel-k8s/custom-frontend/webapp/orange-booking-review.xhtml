@@ -1,0 +1,17 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:ui="http://java.sun.com/jsf/facelets" 
+        xmlns:ice="http://www.icesoft.com/icefaces/component"
+        xmlns:fb="http://www.facebook.com/2008/fbml"
+        template="/WEB-INF/includes/templates/orange-template.xhtml">
+       <ui:param name="pageTitle" value="Booking - Your Journey" />
+      <ui:define name="page-content">
+		<ui:include src="#{bookingBean.reviewInclude}"/>
+	</ui:define>
+	<f:metadata>
+	    <f:viewParam name="journeyId" value="#{bookingBean.selectedJourneyId}"/>
+	    <f:event type="preRenderView" listener="#{bookingBean.loadJourney}"/>
+    </f:metadata>	
+</ui:composition>

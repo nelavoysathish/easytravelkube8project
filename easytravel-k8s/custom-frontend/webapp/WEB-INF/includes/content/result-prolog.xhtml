@@ -1,0 +1,24 @@
+<div xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:ice="http://www.icesoft.com/icefaces/component"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+		xmlns:gate11="http://www.dynatrace.com/gate11/taglib">
+        
+   	<ice:panelGroup styleClass="pagingArea">
+   		<div class="left">
+   			<ice:outputText rendered="#{searchBean.journeyCount eq 0}">
+		   		No journeys found matching your search
+		   			for '<strong>#{searchBean.destinationName}</strong>'.
+   			</ice:outputText>
+   			<ice:outputText rendered="#{searchBean.journeyCount eq 1}">
+		   		Found <strong>one</strong> journey matching your search
+		   			for '<strong>#{searchBean.destinationName}</strong>'.
+   			</ice:outputText>
+   			<ice:outputText rendered="#{searchBean.journeyCount gt 1}">
+		   		Found <strong>#{searchBean.journeyCount}</strong> journeys matching your search
+		   			for '<strong>#{searchBean.destinationName}</strong>'.
+   			</ice:outputText>
+   		</div>
+   	</ice:panelGroup>
+</div>

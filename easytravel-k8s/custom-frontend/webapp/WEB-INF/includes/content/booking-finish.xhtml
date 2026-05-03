@@ -1,0 +1,44 @@
+<div xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:ice="http://www.icesoft.com/icefaces/component"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+		xmlns:gate11="http://www.dynatrace.com/gate11/taglib"
+        class="mainBox">
+
+        <h1 class="mainBoxHeader">Booking Transaction</h1>
+        <gate11:bookingStepIndicator activeStep="4"/>
+		<ice:graphicImage styleClass="bookFinishImage" value="img/booking/easyTravel_bookingtransaction_Header.png" />
+
+		<ice:panelGroup styleClass="bookFinishMessage">
+			<ice:outputText rendered="#{empty bookingBean.bookingState}">
+				Please enter your credit card information first by pressing the <strong>Back</strong> button.
+			</ice:outputText>
+			<ice:outputText rendered="#{bookingBean.bookingState eq 'initial'}">
+				The booking procedure is almost complete: Press the <strong>Finish</strong> button to actually
+				perform the booking.
+			</ice:outputText>
+			<ice:outputText rendered="#{bookingBean.bookingState eq 'success'}">
+				Thank you for using <strong>EasyTravel</strong> - Have a nice trip!<br/>
+				Your booking ID: <strong>#{bookingBean.bookingId}</strong>
+				<script type="text/javascript">
+					$(function() {
+						rumapi.reportValue('bookingtotal', #{bookingBean.bookingTotal});
+						rumapi.reportValue('fullpriceperperson', #{bookingBean.bookingPricePerPerson});
+						rumapi.reportValue('averagepriceperperson', #{bookingBean.averagePricePerPerson});
+						rumapi.reportValue('numberofpersons', #{bookingBean.numberOfPerson});
+						rumapi.reportValue('numberofadults', #{bookingBean.numberAdults});
+						rumapi.reportValue('numberofchildren', #{bookingBean.numberChildren});
+						rumapi.reportString('travellers', '#{bookingBean.travellersLabel}');
+					});
+				</script>
+			</ice:outputText>
+			<ice:panelGroup rendered="#{bookingBean.bookingState eq 'error'}" styleClass="bookPaymentInputError">
+				<ice:messages />
+			</ice:panelGroup>
+		</ice:panelGroup>
+
+		<h:link id="bookFinishBack" outcome="orange-booking-payment" includeViewParams="true" class="commonButton grayButton1 mainBoxButton backButton" value="Back" rendered="#{not (bookingBean.bookingState eq 'success')}" />
+		<ice:commandButton id="bookFinishFinish" styleClass="commonButton orangeButton1 mainBoxButton nextButton" value="Finish" action="#{bookingBean.performBooking}" rendered="#{bookingBean.stateValid and bookingBean.bookingState eq 'initial'}"/>
+		<h:link id="bookFinishNewSearch" outcome="orange" class="commonButton orangeButton2 mainBoxButton nextButton" value="New Search" rendered="#{bookingBean.bookingState eq 'success'}"/>
+</div>

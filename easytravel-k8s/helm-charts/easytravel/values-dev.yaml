@@ -29,7 +29,11 @@ backend:
 
 frontend:
   replicaCount: 1
-  resources:
+  image:
+    repository: sathishtravelsacr.azurecr.io/sathish-travels-frontend
+    tag: latest
+    pullPolicy: Always
+   resources:
     requests:
       memory: "300Mi"
       cpu: "200m"
@@ -38,6 +42,23 @@ frontend:
       cpu: "400m"
   autoscaling:
     enabled: false
+  # Fix health probes - Frontend takes ~90 seconds to start
+  livenessProbe:
+    httpGet:
+      path: /
+      port: 8080
+    initialDelaySeconds: 120
+    periodSeconds: 30
+    timeoutSeconds: 10
+    failureThreshold: 6
+  readinessProbe:
+    httpGet:
+      path: /
+      port: 8080
+    initialDelaySeconds: 90
+    periodSeconds: 15
+    timeoutSeconds: 10
+    failureThreshold: 3
 
 angularFrontend:
   replicaCount: 1
@@ -54,14 +75,30 @@ angularFrontend:
 nginx:
   replicaCount: 1
   service:
-    type: LoadBalancer  # Change from ClusterIP to LoadBalancer
+    type: LoadBalancer
     port: 80
     angularPort: 9079
     backendPort: 8080
+  # Fix health probes - Nginx needs time for backend services
+  livenessProbe:
+    httpGet:
+      path: /
+      port: 80
+    initialDelaySeconds: 60
+    periodSeconds: 30
+    timeoutSeconds: 5
+    failureThreshold: 6
+  readinessProbe:
+    httpGet:
+      path: /
+      port: 80
+    initialDelaySeconds: 45
+    periodSeconds: 15
+    timeoutSeconds: 5
+    failureThreshold: 3
 
 loadgen:
-  enabled: true
-  replicaCount: 1
+  enabled: false  # Changed to false - image has issues
 
 headlessLoadgen:
   customer:

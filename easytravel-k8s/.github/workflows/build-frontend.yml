@@ -1,0 +1,59 @@
+name: Build and Push Custom Frontend
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'custom-frontend/**'
+  workflow_dispatch:
+
+env:
+  ACR_NAME: sathishtravelsacr
+  IMAGE_NAME: sathish-travels-frontend
+  
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+    
+    - name: Log in to Azure Container Registry
+      uses: docker/login-action@v2
+      with:
+        registry: ${{ env.ACR_NAME }}.azurecr.io
+        username: ${{ secrets.ACR_USERNAME }}
+        password: ${{ secrets.ACR_PASSWORD }}
+    
+    - name: Generate image tag
+      id: generate-tag
+      run: |
+        echo "IMAGE_TAG=$(date +%Y%m%d-%H%M%S)-${GITHUB_SHA::7}" >> $GITHUB_OUTPUT
+    
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v4
+      with:
+        context: ./custom-frontend
+        push: true
+        tags: |
+          ${{ env.ACR_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}:${{ steps.generate-tag.outputs.IMAGE_TAG }}
+          ${{ env.ACR_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}:latest
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+    
+    - name: Update Helm values with new image tag
+      run: |
+        sed -i "s|repository:.*|repository: ${{ env.ACR_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}|g" helm-charts/easytravel/values-dev.yaml
+        sed -i "s|tag:.*|tag: \"${{ steps.generate-tag.outputs.IMAGE_TAG }}\"|g" helm-charts/easytravel/values-dev.yaml
+    
+    - name: Commit updated Helm values
+      run: |
+        git config --global user.name 'GitHub Actions'
+        git config --global user.email 'actions@github.com'
+        git add helm-charts/easytravel/values-dev.yaml
+        git commit -m "Update frontend image to ${{ steps.generate-tag.outputs.IMAGE_TAG }}" || echo "No changes"
+        git push

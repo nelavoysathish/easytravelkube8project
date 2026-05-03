@@ -1,0 +1,61 @@
+<ice:form xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:ice="http://www.icesoft.com/icefaces/component"
+     xmlns:gate11="http://www.dynatrace.com/gate11/taglib"
+	 id="loginForm">
+	<ice:outputText rendered="#{loginBean.userContext.authenticated}" styleClass="loggedInUser">
+		Hello #{loginBean.userContext.fullName}!
+	</ice:outputText>
+	<div class="orangeHeaderLogin">
+		<ice:outputLink id="logoutLink" styleClass="button loggedIn" rendered="#{loginBean.userContext.authenticated}" value="j_invalidate_session" title="Logged in as: #{loginBean.userContext.validUserName} (#{loginBean.userContext.fullName})">
+		<ice:outputText rendered="#{loginBean.userContext.hasLoyaltyStatus}">#{loginBean.userContext.loyaltyStatus} status!</ice:outputText>
+		Logout</ice:outputLink>
+		<ice:commandLink id="loginLink" styleClass="button" rendered="#{not loginBean.userContext.authenticated}" action="#{loginRequestBean.showPopup}">Login</ice:commandLink>
+	</div>
+	<ice:panelTooltip id="userList" styleClass="tripDetailsTip" draggable="false" displayOn="click" hideOn="mousedown" rendered="#{not empty adBean.currentPromotion}">
+		<f:facet name="body">
+			<gate11:userListPanel showBookButton="true" showDetailsLink="true"/>
+		</f:facet>
+	</ice:panelTooltip>
+	<div class="orangeHeaderLoginForm">
+           <ice:panelPopup modal="false" draggable="false" visible="#{loginRequestBean.popupVisible}">
+           	<f:facet name="body">
+           		<ice:panelGroup>
+           			<ice:outputText styleClass="orangeLoginMessage" rendered="#{not loginRequestBean.loginFailed}">
+           				Please <strong>Log In</strong> or create a <strong>New Account</strong>
+           			</ice:outputText>
+           			<ice:outputText styleClass="orangeLoginMessage" rendered="#{loginRequestBean.loginFailed}">
+           				<strong class="loginFailed">Login failed!</strong> Please <strong>retry</strong> or create a <strong>New Account</strong>
+           			</ice:outputText>
+
+           			<ice:outputLabel for="username" styleClass="orangeLoginUsername" value="Username" />
+					<ice:inputText id="username" styleClass="orangeLoginTextbox orangeLoginUsername" value="#{loginBean.userName}" action="#{loginRequestBean.popupLogin}"/>
+
+           			<ice:outputLabel for="password" styleClass="orangeLoginPassword" value="Password" />
+					<ice:inputSecret id="password" styleClass="orangeLoginTextbox orangeLoginPassword" value="#{loginBean.password}" action="#{loginRequestBean.popupLogin}"/>
+
+					<h:link id="newAccount" outcome="orange-newaccount" class="commonButton grayButton3 orangeLoginButton orangeLoginNewAccount" value="New Account"/>
+					<ice:commandButton value="Privacy Policy Image" image="img/privacypolicy_lock.png" action="#{loginRequestBean.showUserList}" styleClass="loginPrivacy" />
+					<ice:commandButton id="loginCancel" styleClass="commonButton grayButton4 orangeLoginButton orangeLoginCancel" action="#{loginRequestBean.hidePopup}" value="Cancel"/>
+					<ice:commandButton id="loginSubmit" styleClass="commonButton orangeButton4 orangeLoginButton orangeLoginSubmit" action="#{loginRequestBean.popupLogin}" value="Login"/>
+				</ice:panelGroup>
+			</f:facet>
+           </ice:panelPopup>
+	</div>
+	<ice:panelGroup rendered="#{loginRequestBean.loginSuccessful}">
+    	<script type="text/javascript">
+			rumapi.tagVisit('#{loginBean.userName}');
+		</script>
+    </ice:panelGroup>
+	<ice:panelPopup modal="false" draggable="false" visible="#{loginRequestBean.userListVisible}" styleClass="userList">
+		<f:facet name="body">
+			<ice:panelSeries styleClass="tripDetailsPanel" var="user" value="#{loginBean.users}">
+				<ice:commandLink value="#{user.name}" action="#{loginRequestBean.loginFromUserList}" >
+		       		<f:param name="userName" value="#{user.name}" />
+		       		<f:param name="password" value="#{user.password}" />
+		       	</ice:commandLink>
+		       	<br />
+			</ice:panelSeries>
+		</f:facet>
+	</ice:panelPopup>
+</ice:form>

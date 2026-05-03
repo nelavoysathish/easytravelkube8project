@@ -1,0 +1,55 @@
+<div xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:ice="http://www.icesoft.com/icefaces/component"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+		xmlns:gate11="http://www.dynatrace.com/gate11/taglib"
+        class="mainBox">
+        
+        <h1 class="mainBoxHeader">Booking Transaction</h1>
+        <gate11:bookingStepIndicator activeStep="1"/>
+        
+        <ice:panelGroup styleClass="bookLoginBox">
+  			<ice:outputText styleClass="bookLoginMessage" rendered="#{not loginRequestBean.loginFailed and not loginBean.userContext.authenticated}">
+  				Please <strong>Log In</strong> or create a <strong>New Account</strong> to book your journey.
+  			</ice:outputText>
+  			<ice:outputText styleClass="bookLoginMessage" rendered="#{loginRequestBean.loginFailed and not loginBean.userContext.authenticated}">
+  				<strong class="loginFailed">Login failed!</strong> Please <strong>retry</strong> or create a <strong>New Account</strong>
+  			</ice:outputText>
+  			<ice:outputText styleClass="bookLoginMessage" rendered="#{loginBean.userContext.authenticated}">
+  				You are logged in as: <strong>#{loginBean.userContext.userName}</strong> (#{loginBean.userContext.fullName})<br/>
+  				Please press the <strong>Next</strong> button or login as a different user, if you wish.
+  			</ice:outputText>
+        
+	       <ice:panelGrid columns="2" styleClass="bookLoginTable" cellspacing="2" cellpadding="2">
+	      		<ice:outputLabel for="username"  value="Username" />
+				<ice:inputText id="username" styleClass="bookLoginTextbox" value="#{loginBean.userName}" action="#{loginRequestBean.bookingLogin}"/>
+			
+	        	<ice:outputLabel for="password" value="Password" />
+				<ice:inputSecret id="password" styleClass="bookLoginTextbox" value="#{loginBean.password}" action="#{loginRequestBean.bookingLogin}"/>
+				
+				<ice:outputLabel/> <!-- spacer -->
+				<ice:panelGroup>
+					<h:link id="bookNewAccount" outcome="orange-newaccount" class="commonButton grayButton3 bookLoginButton bookLoginNewAccount" value="New Account"/>
+					<ice:commandButton value="Privacy Policy Image" image="img/privacypolicy_lock.png" action="#{loginRequestBean.showUserListBook}" styleClass="loginPrivacyBook" />
+					<h:link id="bookLoginCancel" outcome="orange"  class="commonButton grayButton4 bookLoginButton bookLoginCancel" value="Cancel"/>
+					<ice:commandButton id="bookLoginSubmit" styleClass="commonButton orangeButton4 bookLoginButton bookLoginSubmit" action="#{loginRequestBean.bookingLogin}" value="Login"/>
+				</ice:panelGroup>
+	       </ice:panelGrid>
+        </ice:panelGroup>
+		<ice:panelPopup modal="false" draggable="false" visible="#{loginRequestBean.userListBookVisible}" styleClass="userListBook">
+			<f:facet name="body">
+				<ice:panelSeries styleClass="tripDetailsPanel" var="user" value="#{loginBean.users}">
+					<ice:commandLink value="#{user.name}" action="#{loginRequestBean.loginFromUserList}" >
+			       		<f:param name="userName" value="#{user.name}" />
+			       		<f:param name="password" value="#{user.password}" />
+			       	</ice:commandLink>
+			       	<br />
+				</ice:panelSeries>
+			</f:facet>
+		</ice:panelPopup>
+        
+        <h:link id="bookLoginBack" outcome="orange" class="commonButton grayButton1 mainBoxButton backButton" value="Back" />
+        <h:link id="bookLoginNext" outcome="orange-booking-review" includeViewParams="true" class="commonButton orangeButton1 mainBoxButton nextButton" value="Next" rendered="#{bookingBean.stateValid}"/>
+		<ice:commandButton id="bookLoginNextSubmit" styleClass="commonButton orangeButton1 mainBoxButton nextButton" action="#{loginRequestBean.bookingLogin}" value="Next" rendered="#{not bookingBean.stateValid}"/>
+</div>

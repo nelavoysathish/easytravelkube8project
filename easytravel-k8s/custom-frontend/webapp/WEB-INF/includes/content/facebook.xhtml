@@ -1,0 +1,32 @@
+<div    xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:ice="http://www.icesoft.com/icefaces/component"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:fb="http://www.facebook.com/2008/fbml"
+        xmlns:og="http://ogp.me/ns#"
+        style="margin-left:150px;margin-right:150px;margin-top:100px;">
+
+Choose if facebook-javascript elements should be included in the page, current state is 
+
+	<ice:outputLabel id="facebookEnabled" style="color:red" value="enabled" rendered="#{facebookBean.facebookEnabled}"/>
+	<ice:outputLabel id="facebookDisabled" style="color:red" value="disabled" rendered="#{not facebookBean.facebookEnabled}"/>:
+
+	<br/>
+		
+	<ice:panelGroup>
+		<ice:selectOneRadio id="facebookStateRadio"
+			value="#{facebookBean.facebookState}"
+			valueChangeListener="#{facebookBean.effectChangeListener}"
+			partialSubmit="true">
+			<f:selectItems id="facebookStateRadioItms"
+				value="#{facebookBean.facebookStateItems}" />
+		</ice:selectOneRadio>
+	</ice:panelGroup>
+
+	face book plugin is 
+	<ice:outputLabel id="facebookPluginEnabled" style="color:red" value="enabled" rendered="#{facebookBean.facebookGloballyEnabled}"/>
+	<ice:outputLabel id="facebookPluginDisabled" style="color:red" value="disabled" rendered="#{not facebookBean.facebookGloballyEnabled}"/>.
+
+	Both have to be enabled in order to have facebook and twitter-javascript included
+</div>

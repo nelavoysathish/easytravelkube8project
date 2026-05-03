@@ -1,0 +1,170 @@
+<configuration>
+  	<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+      		<layout class="ch.qos.logback.contrib.json.classic.JsonLayout">
+        		<jsonFormatter class="ch.qos.logback.contrib.jackson.JacksonJsonFormatter">
+          			<prettyPrint>false</prettyPrint>
+        		</jsonFormatter>
+        		<appendLineSeparator>true</appendLineSeparator>
+      		</layout>
+    	</encoder>
+    </appender>
+  
+	<!-- Possible logging levels:
+  		- TRACE
+  		- DEBUG
+  		- INFO
+  		- WARN
+  		- ERROR
+  		- ALL
+  		- OFF 		 	
+	-->
+	
+	<root level="warn"><appender-ref ref="CONSOLE" /></root>
+	
+	<!-- Sathish Travels -->
+	<logger name="com.dynatrace.easytravel.jms" level="info" />
+	<logger name="com.dynatrace.easytravel.business" level="info" />
+	<logger name="com.dynatrace.easytravel.frontend" level="info" />
+	<logger name="com.dynatrace.easytravel.rest" level="info" />
+	<logger name="com.dynatrace.easytravel.spring.PluginStateManager" level="info" />
+	<logger name="com.dynatrace.easytravel.spring.PluginDependency" level="info" />
+	<logger name="com.dynatrace.easytravel.CreateDatabaseContent" level="warn" />
+	<logger name="com.dynatrace.easytravel.util.ServiceStubProvider" level="info" />
+	<logger name="com.dynatrace.easytravel.util.CPUHelper" level="info" />
+	<logger name="com.dynatrace.easytravel.util.process.HeadlessProcessKillerLinux" level="info" /> 
+	<logger name="com.dynatrace.easytravel.Print" level="info" />
+	<logger name="com.dynatrace.diagnostics.uemload" level="info" />
+	<logger name="com.dynatrace.easytravel.launcher.baseload" level="info" />
+	<logger name="com.dynatrace.easytravel.launcher.plugin.PluginSetupManager" level="info" />
+	<logger name="com.dynatrace.easytravel.weblauncher.ScenarioServlet" level="info" />
+	<logger name="com.dynatrace.easytravel.weblauncher.DownloadServlet" level="info" />
+	<logger name="com.dynatrace.easytravel.launcher.procedures.AbstractDotNetProcedure" level="info" />
+	<logger name="com.dynatrace.easytravel.ipc.NamedPipeNativeApplication" level="info" />
+	<logger name="com.dynatrace.easytravel.ipc.SocketNativeApplication" level="info" />
+	<logger name="com.dynatrace.easytravel.config.EasyTravelConfig" level="info" />
+	<logger name="com.dynatrace.easytravel.config.ThirdPartyContentProxySelector" level="info" />
+	<logger name="com.dynatrace.easytravel.thirdpartycontent" level="info" />
+	<logger name="com.dynatrace.diagnostics.uemload.mobile" level="warn" />
+	<logger name="com.dynatrace.easytravel.WSMQNativeApplication" level="info" />
+	<logger name="com.dynatrace.easytravel.plugins" level="info" />
+	<logger name="com.dynatrace.easytravel.ctg" level="info" />
+	<logger name="com.dynatrace.easytravel.WarDeploymentPlugin" level="info" />
+	<logger name="com.dynatrace.easytravel.pluginscheduler.PluginJob" level="info" />
+	<logger name="com.dynatrace.easytravel.pluginscheduler" level="info" />
+	<logger name="com.dynatrace.easytravel.launcher.pluginscheduler" level="info" />
+	<logger name="com.dynatrace.easytravel.launcher.plugin.restore.UserPluginStateRestore" level="info" />
+	<logger name="com.dynatrace.easytravel.launcher.plugin.restore.BootPluginStateRestore" level="info" />
+	<logger name="com.dynatrace.easytravel.launcher.plugin.restore.ScenarioStateRestore" level="info" />
+	<logger name="com.dynatrace.easytravel.launcher.plugin.restore.RestorePointHolder" level="info" />
+	<logger name="com.dynatrace.easytravel.iptables.Iptables" level="info" />
+	<logger name="com.dynatrace.easytravel.NetworkPacketDrop" level="info" />
+	<!-- Devices -->
+	<!-- <logger name="com.dynatrace.diagnostics.uemload.iot.car.DynatraceRentalCar" level="debug" /> -->
+	<!-- <logger name="com.dynatrace.diagnostics.uemload.mobileopenkit.device.MobileDevice" level="debug" /> -->
+  
+	<!-- WebLauncher Security -->
+	<logger name="com.dynatrace.easytravel.weblauncher.security.HttpSessionManager" level="info" />
+	<logger name="com.dynatrace.easytravel.weblauncher.security.LoginServlet" level="info" />
+	<logger name="com.dynatrace.easytravel.weblauncher.security.SecurityFilter" level="info" />
+	<logger name="com.dynatrace.easytravel.weblauncher.security.LogoutServlet" level="info" />
+
+	<!-- MySQL -->
+	<logger name="com.dynatrace.easytravel.launcher.procedures.MysqlProcedure" level="info" />
+	<logger name="com.dynatrace.easytravel.launcher.procedures.MysqlContentCreationProcedure" level="info" />
+
+	<!-- Unit/Integration Tests -->
+	<logger name="com.dynatrace.easytravel.integration" level="info" />
+	<!-- <logger name="com.dynatrace.easytravel.html" level="info" /> -->
+	<!-- <logger name="com.dynatrace.easytravel.spring" level="info" /> -->
+
+	<!-- hide the warning "ICEpush library missing. Push notification disabled." -->
+	<logger name="org.icefaces.application.PushRenderer" level="error" />
+
+	<!-- to see what happens on the Database side enable these -->
+	<!-- <logger name="com.dynatrace.easytravel.database" level="info" /> -->
+	<!-- <logger name="com.dynatrace.easytravel.database.DatabaseCleanup" level="debug" /> -->
+	<!-- <logger name="com.dynatrace.easytravel.jpa" level="info" /> -->
+
+	<!-- hings that we hide by default -->
+
+	<!-- see APM-85599 - unexepected exception in CustomerFrontend log -->
+	<logger name="io.netty.channel.AbstractChannel" level="error" />
+	
+  
+	<!-- Hibernate -->  
+  	<logger name="org.hibernate.cfg.SettingsFactory" level="warn" />
+  	<logger name="org.hibernate.cfg.Configuration" level="warn" />
+  	<logger name="org.hibernate.cfg.Environment" level="warn" />
+  	<logger name="org.hibernate.cfg.AnnotationBinder" level="warn" />
+  	<logger name="org.hibernate.cfg.annotations.QueryBinder" level="warn" />
+  	<logger name="org.hibernate.cfg.annotations.EntityBinder" level="warn" />
+  	<logger name="org.hibernate.cfg.search.HibernateSearchEventListenerRegister" level="warn" />
+  	<logger name="org.hibernate.connection.ConnectionProviderFactory" level="warn" />
+  	<logger name="org.hibernate.ejb.Ejb3Configuration" level="warn" />
+  	<logger name="org.hibernate.hql.ast.ASTQueryTranslatorFactory" level="warn" />
+  	<logger name="org.hibernate.tool.hbm2ddl.TableMetadata" level="warn" />
+  	<logger name="org.hibernate.annotations.common.Version" level="warn" />
+  	<logger name="org.hibernate.impl.SessionFactoryImpl" level="warn" />
+  	
+  	<!-- Axis2 -->
+	<logger name="org.apache.axis2.deployment.ModuleDeployer" level="warn" />
+
+  	<!-- Tomcat -->
+	<logger name="org.apache.catalina.startup.Embedded" level="warn" />
+	<logger name="org.apache.catalina.startup.ContextConfig" level="warn" />
+	<logger name="org.apache.coyote.http11.Http11Protocol" level="warn" />
+	<!-- <logger name="org.apache.catalina.session.PersistentManagerBase" level="debug" /> -->
+	<!-- <logger name="org.apache.catalina.session.ManagerBase" level="debug" /> -->
+
+  	<!-- Spring -->
+	<logger name="org.springframework.beans.factory.support.DefaultListableBeanFactory" level="warn" />
+	<logger name="org.springframework.web.context.ContextLoader" level="warn" />
+
+  	<!-- ICEfaces -->
+	<!-- keep main icefaces version info: org.icepush.servlet.MainServlet" level="warn" /> -->
+	<logger name="org.icefaces.util.EnvConfig" level="warn" />
+	<logger name="org.icefaces.impl.renderkit.DOMRenderKit" level="warn" />
+
+  	<!-- HtmlUnit -->
+	<!-- reports "Unhandled CSS selector type for specificity computation: '11'." -->
+	<logger name="com.gargoylesoftware.htmlunit.IncorrectnessListenerImpl" level="error" />
+	<!-- reports "CSS error: ..." -->
+	<logger name="com.gargoylesoftware.htmlunit.DefaultCssErrorHandler" level="error" />
+	<!-- reports "Unhandled CSS selector type for specificity computation: '11'." -->
+	<logger name="com.gargoylesoftware.htmlunit.javascript.host.css.SelectorSpecificity" level="error" />
+	<!-- runtimeError: message=[Unexpected exception occurred while parsing HTML snippet: input name="x"] sourceName=[http://localhost:8080/javax.faces.resource/icefaces-compat.js.jsf] line=[1] lineSource=[null] lineOffset=[0] -->
+	<!-- occured ICEfaces 2.0.1 -->
+	<logger name="com.gargoylesoftware.htmlunit.javascript.StrictErrorReporter" level="off" />
+	<logger name="com.gargoylesoftware.htmlunit.javascript.host.Document" level="off" />
+
+	<!-- this is how you can turn on debug-logging: -->
+	<!-- <logger name="org.apache.axis2" level="debug" /> -->
+
+  	<!-- Quartz Scheduler -->
+	<logger name="org.quartz.core" level="warn" />
+	<logger name="org.quartz.plugins.xml" level="warn" />
+	<logger name="org.quartz.simpl" level="warn" />
+	<logger name="org.quartz.SchedulerFactory" level="info" />
+	<logger name="org.quartz.xml.XMLSchedulingDataProcessor" level="info" />
+  	
+  	<logger name="org.apache.commons.httpclient" level="error" />
+	            
+    <!-- Event notification diagnostics -->
+    <logger name="com.dynatrace.easytravel.launcher.config.ConfigFileInitializer" level="info" />
+    <logger name="com.dynatrace.easytravel.spring.PluginNotificationConfigFileGenerator" level="info" />
+    <logger name="com.dynatrace.easytravel.spring.PluginEventNotifier" level="info" />
+    
+    <!-- Procedure start/stop logging -->
+    <!-- 
+    <logger name="com.dynatrace.easytravel.launcher.engine.SingleProcedureBatch" level="info" />
+	<logger name="com.dynatrace.easytravel.launcher.engine.Batch" level="info" />
+	<logger name="com.dynatrace.easytravel.launcher.engine.CommandProcedureStateListener" level="info" /> 
+	-->
+	<logger name="com.dynatrace.easytravel.launcher.engine" level="trace" />
+	<logger name="com.dynatrace.easytravel.launcher.httpd.ApacheHttpdUtils" level="trace" />
+	<logger name="com.dynatrace.easytravel.launcher.Launcher" level="trace" />
+	<logger name="com.dynatrace.easytravel.launcher.vagrant" level="trace" />
+	<logger name="com.dynatrace.easytravel.launcher.procedures" level="trace" />
+	
+</configuration>
