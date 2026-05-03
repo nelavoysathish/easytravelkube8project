@@ -31,7 +31,7 @@ frontend:
   replicaCount: 1
   image:
     repository: sathishtravelsacr.azurecr.io/sathish-travels-frontend
-    tag: latest
+    tag: "20260503-215302-8c39c11"
     pullPolicy: Always
    resources:
     requests:
