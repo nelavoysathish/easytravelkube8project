@@ -37,7 +37,7 @@ jobs:
     - name: Build and push Docker image
       uses: docker/build-push-action@v4
       with:
-        context: ./custom-frontend
+        context: ./easytravel-k8s/custom-frontend  # ✅ FIXED PATH
         push: true
         tags: |
           ${{ env.ACR_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}:${{ steps.generate-tag.outputs.IMAGE_TAG }}
