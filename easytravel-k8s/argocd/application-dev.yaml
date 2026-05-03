@@ -9,7 +9,7 @@ spec:
   project: default
   
   source:
-    repoURL: https://github.com/YOUR_ORG/easytravel-k8s.git  # Update with your repo
+    repoURL: https://github.com/nelavoysathish/easytravel-k8s.git  # Update with your repo
     targetRevision: main
     path: helm-charts/easytravel
     helm:
